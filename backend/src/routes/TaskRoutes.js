@@ -1,7 +1,17 @@
-import express from 'express';
-import TaskConstroller from '../controller/TaskController'
+const express = require('express');
+const TaskController = require('../controller/TaskController');
+const TaskValidation = require('../middlewares/TaskValidation');
+const MacaddressValidation = require('../middlewares/MacaddressValidation');
 
 const router = express.Router();
-router.post('/task', TaskConstroller.create);
+
+router.post('/', TaskValidation, TaskController.create);
+
+router.put('/:id', TaskValidation, TaskController.update);
+
+router.get('/filter/all', MacaddressValidation, TaskController.all);
+router.get('/:id', TaskController.show);
+
+router.delete('/:id', TaskController.delete)
 
 module.exports = router;
