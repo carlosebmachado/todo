@@ -6,6 +6,4 @@ const server = express();
 server.use(express.json());
 server.use('/task', TaskRoutes);
 
-server.listen(3000, () => {
-    
-});
+server.listen(3000, () => {});
