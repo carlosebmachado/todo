@@ -1,4 +1,14 @@
+import React from 'react';
 import styled from 'styled-components';
+
+
+export default () => {
+  return (
+    <Container>
+      <small>&copy; ToDo - Organizing your life</small>
+    </Container>
+  );
+}
 
 export const Container = styled.div`
   width: 100%;

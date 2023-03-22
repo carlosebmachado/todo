@@ -1,4 +1,17 @@
+import React from 'react';
 import styled from 'styled-components';
+
+import filter from '../../assets/filter.png'
+
+
+export default (props) => {
+  return (
+    <Container onClick={props.onClick} actived={props.actived}>
+      <img src={filter} alt="Filter" />
+      <span>{props.title}</span>
+    </Container>
+  );
+}
 
 export const Container = styled.button`
   width: 220px;

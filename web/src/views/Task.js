@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
-import * as S from './styles';
+import styled from 'styled-components';
 import { format } from 'date-fns';
 
 import typeIcons from '../../utils/typeicons'
@@ -10,8 +10,7 @@ import isConnected from '../../utils/isConnected';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
-
-function Task(props) {
+export default (props) => {
   const [redirectHome, setRedirectHome] = useState(false);
   const [redirectSync, setRedirectSync] = useState(false);
   const [type, setType] = useState('');
@@ -153,14 +152,14 @@ function Task(props) {
   }, [props.match.params.id]);
 
   return (
-    <S.Container>
+    <Container>
       {redirectHome && <Redirect to="/" />}
       {redirectSync && <Redirect to="/sync" />}
 
       <Header clickNotification={handleClickNotification} />
 
-      <S.Form>
-        <S.TypeIcons>
+      <Form>
+        <TypeIcons>
           {
             typeIcons.map((icon, index) => (
               index > 0 &&
@@ -169,46 +168,193 @@ function Task(props) {
               </button>
             ))
           }
-        </S.TypeIcons>
+        </TypeIcons>
 
-        <S.Input>
+        <Input>
           <span>Title</span>
           <input type="text" placeholder="task title..." onChange={e => setTitle(e.target.value)} value={title} />
-        </S.Input>
+        </Input>
 
-        <S.TextArea>
+        <TextArea>
           <span>Description</span>
           <textarea rows={5} placeholder="task description..." onChange={e => setDescription(e.target.value)} value={description} />
-        </S.TextArea>
+        </TextArea>
 
-        <S.Input>
+        <Input>
           <span>Date</span>
           <input type="date" placeholder="task date..." onChange={e => setDate(e.target.value)} value={date} />
-        </S.Input>
+        </Input>
 
-        <S.Input>
+        <Input>
           <span>Hour</span>
           <input type="time" placeholder="task date..." onChange={e => setHour(e.target.value)} value={hour} />
-        </S.Input>
+        </Input>
 
-        <S.Options>
+        <Options>
           <div>
             <input type="checkbox" onChange={e => setDone(!done)} checked={done} />
             <span>DONE</span>
           </div>
           {props.match.params.id && <button onClick={handleDelete}>DELETE</button>}
-        </S.Options>
+        </Options>
 
-        <S.Save>
+        <Save>
           <button onClick={handleSave}>SAVE</button>
-        </S.Save>
+        </Save>
 
-      </S.Form>
+      </Form>
 
       <Footer />
 
-    </S.Container>
+    </Container>
   );
 }
 
-export default Task;
+export const Container = styled.div`
+  width: 100%;
+  /* overflow: auto; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+export const Form = styled.div`
+  width: 50%;
+  margin-bottom: 70px;
+`
+
+export const TypeIcons = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  .inactive {
+    opacity: 0.5;
+  }
+
+  button {
+    background: none;
+    border: none;
+  }
+
+  img {
+    width: 50px;
+    height: 50px;
+    margin: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      opacity: 0.75;
+    }
+  }
+`
+
+export const Input = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 20px 0;
+
+  span {
+    color: #707070;
+    margin-bottom: 5px;
+  }
+
+  input {
+    font-size: 1.2rem;
+    padding: 10px;
+    border: none;
+    color: #414141;
+    border-bottom: 1px solid #F9AA33;
+
+    &:focus {
+      outline: none;
+    }
+  }
+`
+
+export const TextArea = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 20px 0;
+
+  span {
+    color: #707070;
+    margin-bottom: 5px;
+  }
+  
+  textarea {
+    font-size: 1.2rem;
+    padding: 10px;
+    border: 1px solid #F9AA33;
+    border-radius: 5px;
+    resize: vertical;
+    font-family: sans-serif;
+
+    &:focus {
+      outline: none;
+    }
+
+    &::-webkit-resizer {
+      color: #F9AA33;
+    }
+  }
+`
+
+export const Options = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #F9AA33;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 1.1rem;
+
+    span {
+      margin-left: 5px;
+    }
+  }
+
+  button {
+    font-weight: bolder;
+    font-size: 1.1rem;
+    color: #344955;
+    border: none;
+    background: none;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      opacity: 0.75;
+    }
+  }
+`
+
+export const Save = styled.div`
+  width: 100%;
+  margin-top: 30px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    opacity: 0.75;
+  }
+
+  button {
+    width: 100%;
+    background-color: #F9AA33;
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border-radius: 20px;
+    padding: 8px 0 6px 0;
+    cursor: pointer;
+  }
+`

@@ -1,4 +1,27 @@
+import React, { useMemo } from 'react';
+import { format } from 'date-fns';
 import styled from 'styled-components';
+import icons from '../../utils/typeicons'
+
+
+export default (props) => {
+  // const date = useMemo(() => format(new Date(props.when), 'dd/MM/yyyy'), [props.when]);
+  const date = useMemo(() => format(new Date(props.when), 'MM-dd-yyyy'), [props.when]);
+  const hour = useMemo(() => format(new Date(props.when), 'HH:mm'), [props.when]);
+
+  return (
+    <Container done={props.done}>
+      <Header>
+        <img src={icons[props.type]} alt="Task Icon" />
+        <h3>{props.title}</h3>
+      </Header>
+      <Footer>
+        <strong>{date}</strong>
+        <span>{hour}</span>
+      </Footer>
+    </Container>
+  );
+}
 
 export const Container = styled.button`
   display: flex;

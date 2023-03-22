@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import * as S from './styles';
+import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 import api from '../../services/api';
@@ -9,7 +9,7 @@ import logo from '../../assets/logo.png';
 import bell from '../../assets/bell.png';
 
 
-function Header(props) {
+export default (props) => {
   const [lateCount, setLateCount] = useState(0);
 
   async function handleLogout() {
@@ -30,13 +30,13 @@ function Header(props) {
   }, []);
 
   return (
-    <S.Container>
-      <S.LeftSide>
+    <Container>
+      <LeftSide>
         <Link to={isConnected ? '/' : '/sync'}>
           <img src={logo} alt="Logo" />
         </Link>
-      </S.LeftSide>
-      <S.RightSide>
+      </LeftSide>
+      <RightSide>
         {
           isConnected ?
             <>
@@ -63,9 +63,98 @@ function Header(props) {
             <span>{lateCount}</span>
           }
         </button>
-      </S.RightSide>
-    </S.Container>
+      </RightSide>
+    </Container>
   );
 }
 
-export default Header;
+export const Container = styled.div`
+  display: flex;
+  width: 100%;
+  height: 70px;
+  background-color: #344955;
+  border-bottom: 5px solid #F9AA33;
+`
+
+export const LeftSide = styled.div`
+  display: flex;
+  width: 50%;
+  height: 70px;
+  padding-left: 10px;
+  
+  a {
+    align-self: center;
+    
+    img {
+      width: 100px;
+    }
+  }
+`
+
+export const RightSide = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 50%;
+  height: 70px;
+
+  a {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    text-transform: uppercase;
+    margin: 0 10px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      color: #F9AA33;
+    }
+  }
+
+  #notification {
+    transition: all 0.3s ease;
+    background: none;
+    border: none;
+    cursor: pointer;
+
+    img {
+      width: 22px;
+    }
+
+    span {
+      position: relative;
+      top: -12px;
+      right: 10px;
+      background-color: white;
+      color: #F9AA33;
+      padding: 0 4px;
+      border-radius: 50%;
+    }
+
+    &:hover {
+      opacity: 0.75;
+    }
+  }
+
+  .divider::after {
+    content: "|";
+    margin: 0 10px;
+    color: white;
+    opacity: 0.5;
+  }
+
+  button {
+    font-size: 1rem;
+    text-transform: uppercase;
+    background: none;
+    border: none;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      color: #F9AA33;
+    }
+  }
+`
