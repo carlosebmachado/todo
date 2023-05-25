@@ -9,4 +9,4 @@ ToDo is a task management app. The backend was developed in Node.js using the Mo
 - Synchronization: Sync your tasks across multiple devices.
 
 ## License
-This project is licensed under the MIT License. See the [LICENSE](https://github.com/carlosebmachado/todo/blob/master/README.md) file for details.
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/carlosebmachado/todo/README.md) file for details.
