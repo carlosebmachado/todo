@@ -16,7 +16,9 @@ export default function TaskCard(props) {
     <Container>
       <Checkbox done={done} setDone={setDone} />
       <ContentWrapper>
-        <h3>{props.title}</h3>
+        <Link to={`/task/${props._id}`}>
+          <h3>{props.title}</h3>
+        </Link>
         <BottomWrapper>
           <DateWrapper>
             <strong>{date}</strong>
@@ -61,6 +63,10 @@ const ContentWrapper = styled.div`
     color: #707070;
     font-size: 1rem;
     margin: 5px 10px;
+  }
+
+  & > a {
+    text-decoration: none;
   }
 `;
 

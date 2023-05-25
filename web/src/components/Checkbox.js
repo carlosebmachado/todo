@@ -22,13 +22,12 @@ const Container = styled.label`
   padding-left: 37px;
   margin-left: 15px;
   margin-bottom: 24px;
-  cursor: pointer;
   font-size: 22px;
   user-select: none;
   cursor: pointer;
 
   &:hover input ~ .checkmark {
-    background-color: #ccc;
+    background-color: #eee;
   }
 
   & input:checked ~ .checkmark {
@@ -65,9 +64,9 @@ const Checkmark = styled.span`
   left: 0;
   height: 25px;
   width: 25px;
-  background-color: #eee;
-  border-radius: 2.5px;
-  box-shadow: 0px 0px 0px 1px #cfcfcf inset;
+  /* background-color: #eee; */
+  border-radius: 25px;
+  box-shadow: 0px 0px 0px 2px #2196F3 inset;
 
   &:after {
     content: "";

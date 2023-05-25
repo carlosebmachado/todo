@@ -9,9 +9,10 @@ import Footer from '../components/Footer';
 import FilterCard from '../components/FilterCard';
 import TaskCard from '../components/TaskCard';
 import ContentWrapperBase from '../components/styled-components/ContentWrapperBase';
+import FixedImageButton from '../components/FixedImageButton'
 
 
-export default function Home() {
+export default function Home(props) {
   const [filterActivated, setFilterActivated] = useState('all');
   const [tasks, setTasks] = useState([]);
   const [redirectSync, setRedirectSync] = useState(false);
@@ -19,6 +20,10 @@ export default function Home() {
 
   function notification() {
     setFilterActivated('late');
+  }
+
+  function handleNewTaskClick(e) {
+    e.preventDefault();
   }
 
   useEffect(() => {
@@ -69,6 +74,8 @@ export default function Home() {
         <TaskCard type={7} title="Task loren ipsum dolor amet" when={new Date(Date.now())} done={false} />
         <TaskCard type={8} title="Task loren ipsum dolor amet" when={new Date(Date.now())} done={true} />
       </CardWrapper>
+
+      <FixedImageButton onClick={handleNewTaskClick} />
 
       <Footer />
 
