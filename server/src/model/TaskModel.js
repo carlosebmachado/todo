@@ -8,7 +8,8 @@ const TaskSchema = new Schema({
     description: {type: String, required: true},
     when: {type: Date, required: true},
     done: {type: Boolean, default: false},
-    created: {type: Date, default: Date.now()}
+    created: {type: Date, default: Date.now},
+    lastUpdate: {type: Date, default: Date.now}
 });
 
 module.exports = mongoose.model('Task', TaskSchema);

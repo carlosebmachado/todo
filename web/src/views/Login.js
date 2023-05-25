@@ -1,30 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
-import QrCode from 'qrcode.react';
 import styled from 'styled-components';
 
-import isConnected from '../../utils/isConnected';
-
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 
 export default () => {
   const [redirectHome, setRedirectHome] = useState(false);
-  const [mac, setMac] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [isConnected, setIsConnected] = useState(false);
 
-  async function saveMac() {
-    if (!mac) {
-      alert('You need to enter the generated code.');
-    } else {
-      await localStorage.setItem('@todo/macaddress', mac);
-      // setRedirectHome(true);
-      window.location.reload();
+  async function signin() {
+    if (!username) {
+      alert('You need to enter your username.');
     }
-  }
-
-  function handleClickNotification() {
-    setRedirectHome(true);
+    if (!password) {
+      alert('You need to enter your password.');
+    }
+    setIsConnected(true);
   }
 
   useEffect(() => {
@@ -39,18 +34,16 @@ export default () => {
 
       {redirectHome && <Redirect to="/" />}
 
-      <Header clickNotification={handleClickNotification} />
+      <Header clickNotification={() => { }} />
 
       <Content>
-        <h1>CAPTURE THE QR CODE THROUGH THE APP</h1>
+        <h1>APP LOGIN</h1>
         <p>your activities will be synchronized with your smartphone</p>
-        <QRCodeArea>
-          <QrCode value="getmacaddress" size={350} />
-        </QRCodeArea>
         <Validation>
-          <span>Enter the code generated on your cell phone</span>
-          <input type="text" onChange={e => setMac(e.target.value)} value={mac} />
-          <button onClick={saveMac}>sync</button>
+          <span>Enter the username and password</span>
+          <input type="text" onChange={e => setUsername(e.target.value)} value={username} />
+          <input type="password" onChange={e => setPassword(e.target.value)} value={password} />
+          <button onClick={signin}>Sign in</button>
         </Validation>
       </Content>
 
@@ -85,12 +78,6 @@ export const Content = styled.div`
   }
 `
 
-export const QRCodeArea = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-`
-
 export const Validation = styled.div`
   display: flex;
   flex-direction: column;
@@ -109,9 +96,14 @@ export const Validation = styled.div`
     border: none;
     border-radius: 5px;
     border: 1px solid #F9AA33;
+    margin-top: 10px;
     
     &:focus {
       outline: none;
+    }
+
+    &:last-of-type {
+      margin-bottom: 20px;
     }
   }
 

@@ -8,10 +8,9 @@ import iconShop from '../assets/shop.png'
 import iconTravel from '../assets/travel.png'
 import iconSport from '../assets/health.png'
 
-const typeIcons = [
+export default [
   null,
   iconDefault,
-  iconFootball,
   iconFood,
   iconWork,
   iconFriends,
@@ -20,5 +19,3 @@ const typeIcons = [
   iconTravel,
   iconSport
 ]
-
-export default typeIcons;

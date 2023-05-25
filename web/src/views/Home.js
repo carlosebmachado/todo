@@ -1,48 +1,47 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 import api from '../services/api';
-import isConnected from '../utils/isConnected';
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import FilterCard from '../components/FilterCard';
 import TaskCard from '../components/TaskCard';
+import ContentWrapperBase from '../components/styled-components/ContentWrapperBase';
 
 
-export default () => {
+export default function Home() {
   const [filterActivated, setFilterActivated] = useState('all');
   const [tasks, setTasks] = useState([]);
   const [redirectSync, setRedirectSync] = useState(false);
+  const [isConnected, setIsConnected] = useState(true);
 
   function notification() {
     setFilterActivated('late');
   }
 
-  // trigger loadTasks based on filterActivated
   useEffect(() => {
-    // load tasks from api to tasks state
     async function loadTasks() {
       await api.get(`/task/filter/${filterActivated}/${isConnected}`)
-      .then(response => {
-        setTasks(response.data);
-      })
+        .then(response => {
+          setTasks(response.data);
+        })
     }
 
     if (!isConnected) {
-      // setRedirectSync(true);
+      setRedirectSync(true);
     }
 
     loadTasks();
-  }, [filterActivated]);
+  }, [filterActivated, isConnected]);
 
   return (
     <Container>
-      {redirectSync && <Redirect to="/sync" />}
+      {redirectSync && <Redirect to="/login" />}
 
       <Header clickNotification={notification} />
-  
+
       <FilterWrapper>
         <FilterCard title="All" actived={filterActivated === 'all'} onClick={() => setFilterActivated('all')} />
         <FilterCard title="Today" actived={filterActivated === 'today'} onClick={() => setFilterActivated('today')} />
@@ -51,18 +50,24 @@ export default () => {
         <FilterCard title="Year" actived={filterActivated === 'year'} onClick={() => setFilterActivated('year')} />
       </FilterWrapper>
 
-      <Title>
+      {/* <Title>
         <h1>{filterActivated === 'late' ? 'overdue tasks' : 'tasks'}</h1>
-      </Title>
+      </Title> */}
 
       <CardWrapper>
         {
           tasks.map((t, i) => (
-            <Link key={i.toString()} to={`/task/${t._id}`}>
-              <TaskCard type={t.type} title={t.title} when={t.when} done={t.done} />
-            </Link>
+            <TaskCard key={i.toString()} id={t._id} type={t.type} title={t.title} when={t.when} done={t.done} />
           ))
         }
+        <TaskCard type={1} title="Task loren ipsum dolor amet" when={new Date(Date.now())} done={false} />
+        <TaskCard type={2} title="Task loren ipsum dolor amet" when={new Date(Date.now())} done={true} />
+        <TaskCard type={3} title="Task loren ipsum dolor amet" when={new Date(Date.now())} done={false} />
+        <TaskCard type={4} title="Task loren ipsum dolor amet" when={new Date(Date.now())} done={false} />
+        <TaskCard type={5} title="Task loren ipsum dolor amet" when={new Date(Date.now())} done={false} />
+        <TaskCard type={6} title="Task loren ipsum dolor amet" when={new Date(Date.now())} done={false} />
+        <TaskCard type={7} title="Task loren ipsum dolor amet" when={new Date(Date.now())} done={false} />
+        <TaskCard type={8} title="Task loren ipsum dolor amet" when={new Date(Date.now())} done={true} />
       </CardWrapper>
 
       <Footer />
@@ -71,22 +76,22 @@ export default () => {
   );
 }
 
-export const Container = styled.div`
+const Container = styled.div`
   width: 100%;
   margin-bottom: 70px;
-  /* overflow: auto; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
-export const FilterWrapper = styled.div`
+const FilterWrapper = styled(ContentWrapperBase)`
   width: 100%;
-  height: 60px;
-  margin-top: 30px;
-  display: flex;
-  /* flex-wrap: wrap; */
+  margin-top: 15px;
+  margin-bottom: 5px;
   justify-content: space-around;
-`
+`;
 
-export const Title = styled.div`
+const Title = styled.div`
   width: 100%;
   border-bottom: 1px solid #344955;
   text-align: center;
@@ -95,23 +100,18 @@ export const Title = styled.div`
   h1 {
     color: #344955;
     position: relative;
-    top: 34px;
+    top: 15px;
     text-transform: uppercase;
     background-color: white;
     font-size: 1.7rem;
     display: inline-block;
     padding: 0 20px;
   }
-`
+`;
 
-export const CardWrapper = styled.div`
-  width: 100%;
-  display: flex;
+const CardWrapper = styled(ContentWrapperBase)`
   flex-wrap: wrap;
-  justify-content: space-around;
-
-  a {
-    text-decoration: none;
-  }
-
-`
+  margin-top: 25px;
+  box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+`;

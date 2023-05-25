@@ -2,10 +2,10 @@ const TaskModel = require('../model/TaskModel');
 const { isPast } = require('date-fns');
 
 const TaskValidation = async (req, res, next) => {
-    const { macaddress, type, title, description, when } = req.body;
+    const { userId, type, title, description, when } = req.body;
 
-    if (!macaddress)
-        return res.status(400).json({error: 'missing macaddress'});
+    if (!userId)
+        return res.status(400).json({error: 'missing user id'});
     else if (!type)
         return res.status(400).json({error: 'missing type'});
     else if (!title)
@@ -20,14 +20,14 @@ const TaskValidation = async (req, res, next) => {
             exists = await TaskModel.findOne({
                 '_id': {'$ne': req.params.id},
                 'when': {'$eq': new Date(when)},
-                'macaddress': {'$in': macaddress}
+                'userId': {'$in': userId}
             });
         } else {
             if (isPast(new Date(when)))
                 return res.status(400).json({error: 'date in the past'});
             exists = await TaskModel.findOne({
                 'when': {'$eq': new Date(when)},
-                'macaddress': {'$in': macaddress}
+                'userId': {'$in': userId}
             });
         }
         if (exists)

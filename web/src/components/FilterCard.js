@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import filter from '../../assets/filter.png'
+import filter from '../assets/filter.png'
 
 
 export default (props) => {
@@ -14,12 +14,11 @@ export default (props) => {
 }
 
 export const Container = styled.button`
-  width: 220px;
-  height: 80px;
+  width: 100%;
   margin: 0 10px;
-  padding: 15px;
+  padding: 8px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-between;
   background-color: ${props => props.actived ? '#F9AA33' : '#344955'};
   border-radius: 5px;
@@ -33,13 +32,11 @@ export const Container = styled.button`
 
   img {
     width: 22px;
-    align-self: flex-start;
   }
 
   span {
     color: white;
     font-weight: bold;
-    align-self: flex-end;
     font-size: 1.1rem;
   }
 `

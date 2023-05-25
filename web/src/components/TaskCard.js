@@ -1,68 +1,100 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { format } from 'date-fns';
 import styled from 'styled-components';
-import icons from '../../utils/typeicons'
+import icons from '../utils/typeicons'
+import types from '../utils/typenames';
+import { Link } from 'react-router-dom';
+import Checkbox from './Checkbox';
 
 
-export default (props) => {
-  // const date = useMemo(() => format(new Date(props.when), 'dd/MM/yyyy'), [props.when]);
-  const date = useMemo(() => format(new Date(props.when), 'MM-dd-yyyy'), [props.when]);
+export default function TaskCard(props) {
+  const [done, setDone] = useState(props.done);
+  const date = useMemo(() => format(new Date(props.when), 'yyyy-MM-dd'), [props.when]);
   const hour = useMemo(() => format(new Date(props.when), 'HH:mm'), [props.when]);
 
   return (
-    <Container done={props.done}>
-      <Header>
-        <img src={icons[props.type]} alt="Task Icon" />
+    <Container>
+      <Checkbox done={done} setDone={setDone} />
+      <ContentWrapper>
         <h3>{props.title}</h3>
-      </Header>
-      <Footer>
-        <strong>{date}</strong>
-        <span>{hour}</span>
-      </Footer>
+        <BottomWrapper>
+          <DateWrapper>
+            <strong>{date}</strong>
+            <span>{hour}</span>
+          </DateWrapper>
+          <TypeWrapper>
+            <span>{types[props.type]}</span>
+            <img src={icons[props.type]} alt="Task Icon" />
+          </TypeWrapper>
+        </BottomWrapper>
+      </ContentWrapper>
     </Container>
   );
 }
 
-export const Container = styled.button`
-  display: flex;
-  width: 270px;
-  height: 200px;
+const Container = styled.div`
+  width: 100%;
+  padding: 10px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  box-shadow: 0px 2px 13px 0px rgba(0, 0, 0, 0.40);
-  border-radius: 5px;
-  margin: 20px;
-  background-color: white;
+  justify-content: flex-start;
+  flex-direction: row;
   border: none;
-  cursor: pointer;
+  border-bottom: 1px solid #ccc;
+  /* cursor: pointer; */
   transition: all 0.3s ease;
-  opacity: ${props => props.done ? 0.5 : 1 };
 
-  &:hover {
-    opacity: 0.8;
+  &:last-of-type {
+    border-bottom: none;
   }
-`
 
-export const Header = styled.header`
+`;
+
+const ContentWrapper = styled.div`
+  width: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
   flex-direction: column;
-`
+  align-items: flex-start;
+  justify-content: row;
 
-export const Footer = styled.footer`
-  width: calc(100% - 40px);
+  h3 {
+    color: #707070;
+    font-size: 1rem;
+    margin: 5px 10px;
+  }
+`;
+
+const BottomWrapper = styled.div`
+  width: 100%;
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
 
   strong {
     color: #F9AA33;
+    font-size: 0.8rem;
+    margin: 0 10px;
   }
 
   span {
     color: #707070;
+    font-size: 0.8rem;
   }
-`
+
+  img {
+    width: 20px;
+    margin: 0 10px;
+  }
+`;
+
+const DateWrapper = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+`;
+
+const TypeWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;

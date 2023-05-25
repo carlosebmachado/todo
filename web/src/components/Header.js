@@ -2,15 +2,16 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
-import api from '../../services/api';
-import isConnected from '../../utils/isConnected';
+import api from '../services/api';
 
-import logo from '../../assets/logo.png';
-import bell from '../../assets/bell.png';
+import logo from '../assets/logo.png';
+import bell from '../assets/bell.png';
+import ContentWrapper from './styled-components/ContentWrapperBase';
 
 
 export default (props) => {
   const [lateCount, setLateCount] = useState(0);
+  const [isConnected, setIsConnected] = useState(false);
 
   async function handleLogout() {
     localStorage.removeItem('@todo/macaddress');
@@ -31,45 +32,50 @@ export default (props) => {
 
   return (
     <Container>
-      <LeftSide>
-        <Link to={isConnected ? '/' : '/sync'}>
-          <img src={logo} alt="Logo" />
-        </Link>
-      </LeftSide>
-      <RightSide>
-        {
-          isConnected ?
-            <>
-              <Link to="/">home</Link>
-              <span className="divider" />
-              <Link to="/task">new task</Link>
-              <span className="divider" />
-              <button onClick={handleLogout}>logout</button>
-            </>
-            :
-            <Link to="/sync">sync</Link>
-        }
-        {/* {
+      <ContentWrapper>
+        <LeftSide>
+          <Link to={isConnected ? '/' : '/login'}>
+            <img src={logo} alt="Logo" />
+          </Link>
+        </LeftSide>
+        <RightSide>
+          {
+            isConnected ?
+              <>
+                <Link to="/">home</Link>
+                <span className="divider" />
+                <Link to="/task">new task</Link>
+                <span className="divider" />
+                <button onClick={handleLogout}>logout</button>
+              </>
+              :
+              <Link to="/login">login</Link>
+          }
+          {/* {
           isConnected ?
             <button onClick={handleLogout}>logout</button>
             :
             <Link to="/sync">sync</Link>
         } */}
-        <span className="divider" />
-        <button id="notification" onClick={props.clickNotification}>
-          <img src={bell} alt="Notification" />
-          {
-            lateCount > 0 &&
-            <span>{lateCount}</span>
-          }
-        </button>
-      </RightSide>
-    </Container>
+          <span className="divider" />
+          <button id="notification" onClick={props.clickNotification}>
+            <img src={bell} alt="Notification" />
+            {
+              lateCount > 0 &&
+              <span>{lateCount}</span>
+            }
+          </button>
+        </RightSide>
+      </ContentWrapper>
+    </Container >
   );
 }
 
 export const Container = styled.div`
   display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
   width: 100%;
   height: 70px;
   background-color: #344955;

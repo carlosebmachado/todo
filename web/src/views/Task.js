@@ -3,12 +3,11 @@ import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 import { format } from 'date-fns';
 
-import typeIcons from '../../utils/typeicons'
-import api from '../../services/api';
-import isConnected from '../../utils/isConnected';
+import typeIcons from '../utils/typeicons'
+import api from '../services/api';
 
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 export default (props) => {
   const [redirectHome, setRedirectHome] = useState(false);
@@ -19,20 +18,21 @@ export default (props) => {
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [hour, setHour] = useState('');
+  const [isConnected, setIsConnected] = useState(false);
 
   // save task
   async function handleSave() {
     // data validation
     if (!type)
-      return alert('The Task type is missing.');
+      return alert('The Task type is missing');
     else if (!title)
-      return alert('The Task title is missing.');
+      return alert('The Task title is missing');
     else if (!description)
-      return alert('The Task description is missing.');
+      return alert('The Task description is missing');
     else if (!date)
-      return alert('The Task date is missing.');
+      return alert('The Task date is missing');
     else if (!hour)
-      return alert('The Task hour is missing.');
+      return alert('The Task hour is missing');
 
     // if id has setted, we update
     if (props.match.params.id) {
@@ -145,7 +145,7 @@ export default (props) => {
     }
 
     if (!isConnected) {
-      setRedirectSync(true);
+      // setRedirectSync(true);
     }
 
     loadTask();
