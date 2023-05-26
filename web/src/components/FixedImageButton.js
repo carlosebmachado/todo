@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { format } from 'date-fns';
 import styled from 'styled-components';
-import icons from '../utils/typeicons'
+import icons from './styled-components/TypeIcon'
 import { Link } from 'react-router-dom';
 
 
@@ -28,8 +28,8 @@ const Container = styled.button`
   cursor: pointer;
   background-color: #F9AA33;
   
-  position: absolute;
-  bottom: 80px;
+  position: fixed;
+  bottom: 70px;
   /*
   --sideWidth: calc(100vw - 1200);
   --halfSideWidth: calc(var(--sideWidth) / 2);

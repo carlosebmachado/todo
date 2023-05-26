@@ -2,9 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 
 import filter from '../assets/filter.png'
+import constants from '../constants';
 
 
-export default (props) => {
+export default function FilterCard(props) {
   return (
     <Container onClick={props.onClick} actived={props.actived}>
       <img src={filter} alt="Filter" />
@@ -20,14 +21,17 @@ export const Container = styled.button`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  background-color: ${props => props.actived ? '#F9AA33' : '#344955'};
+  background-color: ${props => props.actived ? constants.colors.primary : constants.colors.light200};
   border-radius: 5px;
   cursor: pointer;
   border: none;
   transition: all 0.3s ease;
 
   &:hover {
-    background-color: #F9AA33;
+    /* background-color: #F9AA33; */
+    background-color: ${constants.colors.light300};
+    color: ${constants.colors.light100};
+    opacity: 0.5;
   }
 
   img {

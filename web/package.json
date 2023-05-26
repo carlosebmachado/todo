@@ -1,5 +1,5 @@
 {
-  "name": "web",
+  "name": "todo-web-app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -7,10 +7,14 @@
     "date-fns": "^2.22.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-icons": "^4.8.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "styled-components": "^5.3.0",
     "web-vitals": "^1.0.1"
+  },
+  "resolutions": {
+    "react-error-overlay": "6.0.9"
   },
   "scripts": {
     "start": "react-scripts --openssl-legacy-provider start",

@@ -10,6 +10,7 @@ import FilterCard from '../components/FilterCard';
 import TaskCard from '../components/TaskCard';
 import ContentWrapperBase from '../components/styled-components/ContentWrapperBase';
 import FixedImageButton from '../components/FixedImageButton'
+import constants from '../constants';
 
 
 export default function Home(props) {
@@ -28,10 +29,10 @@ export default function Home(props) {
 
   useEffect(() => {
     async function loadTasks() {
-      await api.get(`/task/filter/${filterActivated}/${isConnected}`)
-        .then(response => {
-          setTasks(response.data);
-        })
+      // await api.get(`/task/filter/${filterActivated}/${isConnected}`)
+      //   .then(response => {
+      //     setTasks(response.data);
+      //   })
     }
 
     if (!isConnected) {
@@ -73,11 +74,19 @@ export default function Home(props) {
         <TaskCard type={6} title="Task loren ipsum dolor amet" when={new Date(Date.now())} done={false} />
         <TaskCard type={7} title="Task loren ipsum dolor amet" when={new Date(Date.now())} done={false} />
         <TaskCard type={8} title="Task loren ipsum dolor amet" when={new Date(Date.now())} done={true} />
+        <TaskCard type={1} title="Task loren ipsum dolor amet" when={new Date(Date.now())} done={false} />
+        <TaskCard type={2} title="Task loren ipsum dolor amet" when={new Date(Date.now())} done={true} />
+        <TaskCard type={3} title="Task loren ipsum dolor amet" when={new Date(Date.now())} done={false} />
+        <TaskCard type={4} title="Task loren ipsum dolor amet" when={new Date(Date.now())} done={false} />
+        <TaskCard type={5} title="Task loren ipsum dolor amet" when={new Date(Date.now())} done={false} />
+        <TaskCard type={6} title="Task loren ipsum dolor amet" when={new Date(Date.now())} done={false} />
+        <TaskCard type={7} title="Task loren ipsum dolor amet" when={new Date(Date.now())} done={false} />
+        <TaskCard type={8} title="Task loren ipsum dolor amet" when={new Date(Date.now())} done={true} />
       </CardWrapper>
 
-      <FixedImageButton onClick={handleNewTaskClick} />
+      {/* <FixedImageButton onClick={handleNewTaskClick} /> */}
 
-      <Footer />
+      {/* <Footer /> */}
 
     </Container>
   );
@@ -85,10 +94,12 @@ export default function Home(props) {
 
 const Container = styled.div`
   width: 100%;
-  margin-bottom: 70px;
+  /* margin-bottom: 70px; */
+  padding-bottom: 70px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: ${constants.colors.light100};
 `;
 
 const FilterWrapper = styled(ContentWrapperBase)`
@@ -98,25 +109,8 @@ const FilterWrapper = styled(ContentWrapperBase)`
   justify-content: space-around;
 `;
 
-const Title = styled.div`
-  width: 100%;
-  border-bottom: 1px solid #344955;
-  text-align: center;
-  margin-bottom: 30px;
-
-  h1 {
-    color: #344955;
-    position: relative;
-    top: 15px;
-    text-transform: uppercase;
-    background-color: white;
-    font-size: 1.7rem;
-    display: inline-block;
-    padding: 0 20px;
-  }
-`;
-
 const CardWrapper = styled(ContentWrapperBase)`
+  /* background-color: white; */
   flex-wrap: wrap;
   margin-top: 25px;
   box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.15);

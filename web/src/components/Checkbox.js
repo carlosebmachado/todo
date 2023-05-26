@@ -1,8 +1,6 @@
 import React, { useMemo } from 'react';
-import { format } from 'date-fns';
 import styled from 'styled-components';
-import icons from '../utils/typeicons'
-import { Link } from 'react-router-dom';
+import constants from '../constants';
 
 
 export default function Checkbox(props) {
@@ -31,7 +29,7 @@ const Container = styled.label`
   }
 
   & input:checked ~ .checkmark {
-    background-color: #2196F3;
+    background-color: ${constants.colors.primary};
     box-shadow: none;
   }
 
@@ -64,9 +62,8 @@ const Checkmark = styled.span`
   left: 0;
   height: 25px;
   width: 25px;
-  /* background-color: #eee; */
   border-radius: 25px;
-  box-shadow: 0px 0px 0px 2px #2196F3 inset;
+  box-shadow: 0px 0px 0px 2px ${constants.colors.primary} inset;
 
   &:after {
     content: "";

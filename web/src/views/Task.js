@@ -3,11 +3,14 @@ import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 import { format } from 'date-fns';
 
-import typeIcons from '../utils/typeicons'
+// import typeIcons from '../utils/typeicons'
 import api from '../services/api';
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import TypeIcon from '../components/styled-components/TypeIcon';
+import TypeIconWrapper from '../components/styled-components/TypeIconWrapper';
+import constants from '../constants';
 
 export default (props) => {
   const [redirectHome, setRedirectHome] = useState(false);
@@ -161,10 +164,12 @@ export default (props) => {
       <Form>
         <TypeIcons>
           {
-            typeIcons.map((icon, index) => (
-              index > 0 &&
-              <button key={index.toString()} onClick={() => setType(index)}>
-                <img src={icon} alt="Task type icon" className={type && type !== index ? 'inactive' : undefined} />
+            Array.from(Array(9).keys()).map((i) => (
+              i > 1 &&
+              <button key={(i).toString()} onClick={() => setType(i)}>
+                <TypeIconWrapper style={{ padding: 8 }}>
+                  <TypeIcon size={25} type={i} />
+                </TypeIconWrapper>
               </button>
             ))
           }
@@ -204,7 +209,7 @@ export default (props) => {
 
       </Form>
 
-      <Footer />
+      {/* <Footer /> */}
 
     </Container>
   );
@@ -212,10 +217,12 @@ export default (props) => {
 
 export const Container = styled.div`
   width: 100%;
+  min-height: 100vh;
   /* overflow: auto; */
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: ${constants.colors.light100};
 `;
 
 export const Form = styled.div`
@@ -224,30 +231,23 @@ export const Form = styled.div`
 `
 
 export const TypeIcons = styled.div`
-  width: 100%;
+  width: 80%;
+  margin: 20px auto;
   display: flex;
   justify-content: center;
+  align-items: center;
 
   .inactive {
     opacity: 0.5;
   }
 
   button {
+    margin: 0 10px;
     background: none;
     border: none;
-  }
-
-  img {
-    width: 50px;
-    height: 50px;
-    margin: 10px;
     cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-      opacity: 0.75;
-    }
   }
+
 `
 
 export const Input = styled.div`
@@ -266,12 +266,14 @@ export const Input = styled.div`
     padding: 10px;
     border: none;
     color: #414141;
-    border-bottom: 1px solid #F9AA33;
+    border-bottom: 1px solid ${constants.colors.primary};
+    border-radius: 8px;
 
     &:focus {
       outline: none;
     }
   }
+
 `
 
 export const TextArea = styled.div`
@@ -288,17 +290,17 @@ export const TextArea = styled.div`
   textarea {
     font-size: 1.2rem;
     padding: 10px;
-    border: 1px solid #F9AA33;
-    border-radius: 5px;
+    border: 1px solid ${constants.colors.primary};
+    border-radius: 8px;
     resize: vertical;
-    font-family: sans-serif;
+    /* font-family: sans-serif; */
 
     &:focus {
       outline: none;
     }
 
     &::-webkit-resizer {
-      color: #F9AA33;
+      color: ${constants.colors.primary};
     }
   }
 `
@@ -311,7 +313,7 @@ export const Options = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #F9AA33;
+    color: ${constants.colors.primary};
     text-transform: uppercase;
     font-weight: bold;
     font-size: 1.1rem;
@@ -348,11 +350,11 @@ export const Save = styled.div`
 
   button {
     width: 100%;
-    background-color: #F9AA33;
+    background-color: ${constants.colors.primary};
     border: none;
     color: white;
     font-weight: bold;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     border-radius: 20px;
     padding: 8px 0 6px 0;
     cursor: pointer;

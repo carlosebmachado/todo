@@ -1,10 +1,12 @@
 import React, { useMemo, useState } from 'react';
 import { format } from 'date-fns';
 import styled from 'styled-components';
-import icons from '../utils/typeicons'
 import types from '../utils/typenames';
 import { Link } from 'react-router-dom';
 import Checkbox from './Checkbox';
+import constants from '../constants';
+import TypeIcons from './styled-components/TypeIcon';
+import TypeIconWrapper from './styled-components/TypeIconWrapper';
 
 
 export default function TaskCard(props) {
@@ -21,12 +23,14 @@ export default function TaskCard(props) {
         </Link>
         <BottomWrapper>
           <DateWrapper>
-            <strong>{date}</strong>
+            <span>{date}</span>
             <span>{hour}</span>
           </DateWrapper>
           <TypeWrapper>
             <span>{types[props.type]}</span>
-            <img src={icons[props.type]} alt="Task Icon" />
+            <TypeIconWrapper>
+              <TypeIcons size={15} type={props.type} />
+            </TypeIconWrapper>
           </TypeWrapper>
         </BottomWrapper>
       </ContentWrapper>
@@ -58,11 +62,12 @@ const ContentWrapper = styled.div`
   flex-direction: column;
   align-items: flex-start;
   justify-content: row;
+  margin-left: 10px;
 
   h3 {
     color: #707070;
     font-size: 1rem;
-    margin: 5px 10px;
+    margin: 5px 10px 5px 0;
   }
 
   & > a {
@@ -77,20 +82,10 @@ const BottomWrapper = styled.div`
   align-items: center;
   justify-content: space-between;
 
-  strong {
-    color: #F9AA33;
-    font-size: 0.8rem;
-    margin: 0 10px;
-  }
-
   span {
-    color: #707070;
+    color: ${constants.colors.dark200};
     font-size: 0.8rem;
-  }
-
-  img {
-    width: 20px;
-    margin: 0 10px;
+    margin-right: 10px;
   }
 `;
 
