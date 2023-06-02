@@ -7,13 +7,18 @@ import Footer from '../components/Footer';
 import constants from '../constants';
 
 
-export default function Login() {
+export default function Register() {
   const [redirectHome, setRedirectHome] = useState(false);
+  const [fullName, setFullName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isConnected, setIsConnected] = useState(false);
 
-  async function onSigninClick() {
+  async function onRegisterClick() {
+    if (!fullName) {
+      alert('You need to enter your full name.');
+      return;
+    }
     if (!username) {
       alert('You need to enter your username.');
       return;
@@ -35,17 +40,18 @@ export default function Login() {
   return (
     <Container>
 
-      {redirectHome && <Redirect to="/" />}
+      {redirectHome && <Redirect to="/login" />}
 
       <Header clickNotification={() => { }} />
 
       <Content>
-        <h1>LOGIN</h1>
+        <h1>REGISTER</h1>
         <UserDataWrapper>
-          <small>Enter login data</small>
+          <small>Enter register data</small>
+          <input placeholder='full name...' type="text" onChange={e => setFullName(e.target.value)} value={fullName} />
           <input placeholder='username...' type="text" onChange={e => setUsername(e.target.value)} value={username} />
           <input placeholder='password...' type="password" onChange={e => setPassword(e.target.value)} value={password} />
-          <button onClick={onSigninClick}>Sign in</button>
+          <button onClick={onRegisterClick}>REGISTER</button>
         </UserDataWrapper>
       </Content>
 
@@ -78,6 +84,7 @@ export const Content = styled.div`
 export const UserDataWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
   margin: 10px;
 
   small {
@@ -114,6 +121,7 @@ export const UserDataWrapper = styled.div`
     cursor: pointer;
     margin-top: 10px;
     border: none;
+    width: 100%;
     text-transform: uppercase;
 
     &:hover {
