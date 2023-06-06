@@ -51,6 +51,7 @@ export default function Register() {
           <input placeholder='full name...' type="text" onChange={e => setFullName(e.target.value)} value={fullName} />
           <input placeholder='username...' type="text" onChange={e => setUsername(e.target.value)} value={username} />
           <input placeholder='password...' type="password" onChange={e => setPassword(e.target.value)} value={password} />
+          <a href="/login">Already have an account?</a>
           <button onClick={onRegisterClick}>REGISTER</button>
         </UserDataWrapper>
       </Content>
@@ -85,7 +86,6 @@ export const UserDataWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 10px;
 
   small {
     text-transform: uppercase;
@@ -111,6 +111,12 @@ export const UserDataWrapper = styled.div`
     }
   }
 
+  a {
+    color: ${constants.colors.primary};
+    text-decoration: none;
+    margin-bottom: 20px;
+  }
+
   button {
     font-weight: bold;
     background-color: ${constants.colors.primary};
@@ -125,7 +131,7 @@ export const UserDataWrapper = styled.div`
     text-transform: uppercase;
 
     &:hover {
-      background-color: #344955;
+      background-color: ${constants.colors.secondary};
     }
   }
 `;

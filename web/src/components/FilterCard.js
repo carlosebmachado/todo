@@ -28,10 +28,8 @@ export const Container = styled.button`
   transition: all 0.3s ease;
 
   &:hover {
-    /* background-color: #F9AA33; */
-    background-color: ${constants.colors.light300};
     color: ${constants.colors.light100};
-    opacity: 0.5;
+    background-color: ${constants.colors.secondary};
   }
 
   img {

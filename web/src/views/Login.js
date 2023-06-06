@@ -45,6 +45,7 @@ export default function Login() {
           <small>Enter login data</small>
           <input placeholder='username...' type="text" onChange={e => setUsername(e.target.value)} value={username} />
           <input placeholder='password...' type="password" onChange={e => setPassword(e.target.value)} value={password} />
+          <a href="/register">Don't have an account?</a>
           <button onClick={onSigninClick}>Sign in</button>
         </UserDataWrapper>
       </Content>
@@ -78,7 +79,7 @@ export const Content = styled.div`
 export const UserDataWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 10px;
+  align-items: center;
 
   small {
     text-transform: uppercase;
@@ -104,6 +105,12 @@ export const UserDataWrapper = styled.div`
     }
   }
 
+  a {
+    color: ${constants.colors.primary};
+    text-decoration: none;
+    margin-bottom: 20px;
+  }
+
   button {
     font-weight: bold;
     background-color: ${constants.colors.primary};
@@ -114,10 +121,11 @@ export const UserDataWrapper = styled.div`
     cursor: pointer;
     margin-top: 10px;
     border: none;
+    width: 100%;
     text-transform: uppercase;
 
     &:hover {
-      background-color: #344955;
+      background-color: ${constants.colors.secondary};
     }
   }
 `;

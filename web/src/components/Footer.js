@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import constants from '../constants';
 
 
 export default () => {
@@ -18,10 +19,10 @@ export const Container = styled.div`
   justify-content: center;
   position: fixed;
   bottom: 0;
-  background-color: #344955;
-  border-top: 3px solid #F9AA33;
+  background-color: white;
+  box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.15);
 
   small {
-    color: white;
+    color: ${constants.colors.primary};
   }
 `

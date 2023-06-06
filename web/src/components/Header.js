@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import api from '../services/api';
 
@@ -12,10 +12,13 @@ import constants from '../constants';
 export default function Header(props) {
   const [lateCount, setLateCount] = useState(0);
   const [isConnected, setIsConnected] = useState(true);
+  const [logout, setLogout] = useState(false);
 
   async function handleLogout() {
     localStorage.removeItem('@todo/macaddress');
-    window.location.reload();
+    setLogout(true);
+    // window.location.reload();
+    // useNavigate('/login');
   }
 
   // trigger loadTasks based on filterActivated
@@ -32,6 +35,7 @@ export default function Header(props) {
 
   return (
     <Container>
+      {logout && <Redirect to="/login" />}
       <ContentWrapper>
         <LeftSide>
           <Link to={isConnected ? '/' : '/login'}>
