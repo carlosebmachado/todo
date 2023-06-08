@@ -1,7 +1,7 @@
 const UserController = require('./UserController');
 const UserModel = require('../model/UserModel');
 
-class SessionController {
+class AuthController {
 
   async register(req, res) {
     const { username, password, name } = req.body;
@@ -12,10 +12,8 @@ class SessionController {
       await user.save();
       var token = jwt.sign(user, process.env.JWT_SECRET);
       res.status(200).json({ userId: user._id, token});
-      return;
     } catch (error) {
       res.status(500).json(error);
-      return;
     }
     
   }
@@ -33,10 +31,8 @@ class SessionController {
     try {
       var token = jwt.sign(user, process.env.JWT_SECRET);
       res.status(200).json({ userId: user._id, token});
-      return;
     } catch (error) {
       res.status(500).json(error);
-      return;
     }
     
   }
@@ -52,4 +48,4 @@ class SessionController {
 
 }
 
-module.exports = new SessionController();
+module.exports = new AuthController();

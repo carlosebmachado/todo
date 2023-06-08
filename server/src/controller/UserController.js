@@ -1,10 +1,10 @@
 const UserModel = require('../model/UserModel');
-const SessionController = require('./SessionController');
+const AuthController = require('./AuthController');
 
 class UserController {
 
   async update(req, res) {
-    var user = SessionController.checkUser(req.headers['authorization']);
+    var user = AuthController.checkUser(req.headers['authorization']);
     if (!user) {
       res.status(401).json({ error: 'invalid auth' });
       return;
@@ -20,7 +20,7 @@ class UserController {
   }
 
   async show(req, res) {
-    var user = SessionController.checkUser(req.headers['authorization']);
+    var user = AuthController.checkUser(req.headers['authorization']);
     if (!user) {
       res.status(401).json({ error: 'invalid auth' });
       return;
