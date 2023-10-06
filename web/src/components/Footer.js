@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import constants from '../constants';
 
 
-export default () => {
+export default function Footer() {
   return (
     <Container>
       <small>&copy; ToDo - Organizing your life</small>

@@ -1,8 +1,5 @@
-import React, { useMemo } from 'react';
-import { format } from 'date-fns';
+import React from 'react';
 import styled from 'styled-components';
-import icons from './styled-components/TypeIcon'
-import { Link } from 'react-router-dom';
 
 
 export default function Checkbox(props) {
