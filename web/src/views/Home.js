@@ -3,44 +3,59 @@ import styled from 'styled-components';
 import { Redirect } from 'react-router-dom';
 
 import api from '../services/api';
+import SessionStore from '../utils/SessionStore';
 
 import Header from '../components/Header';
-import Footer from '../components/Footer';
+// import Footer from '../components/Footer';
 import FilterCard from '../components/FilterCard';
 import TaskCard from '../components/TaskCard';
 import ContentWrapperBase from '../components/styled-components/ContentWrapperBase';
-import FixedImageButton from '../components/FixedImageButton'
+// import FixedImageButton from '../components/FixedImageButton'
 import constants from '../constants';
 
 
 export default function Home(props) {
+  const [token, setToken] = useState('');
   const [filterActivated, setFilterActivated] = useState('all');
   const [tasks, setTasks] = useState([]);
   const [redirectSync, setRedirectSync] = useState(false);
-  const [isConnected, setIsConnected] = useState(true);
+  const [isConnected, setIsConnected] = useState(false);
 
   function notification() {
     setFilterActivated('late');
   }
 
-  function handleNewTaskClick(e) {
-    e.preventDefault();
-  }
+  // function handleNewTaskClick(e) {
+  //   e.preventDefault();
+  // }
 
   useEffect(() => {
     async function loadTasks() {
-      // await api.get(`/task/filter/${filterActivated}/${isConnected}`)
-      //   .then(response => {
-      //     setTasks(response.data);
-      //   })
+      console.log('token call: ', token);
+      await api(token).get(`/task/filter/${filterActivated}`)
+        .then(response => {
+          setTasks(response.data);
+        })
     }
 
     if (!isConnected) {
-      setRedirectSync(true);
+      SessionStore.getData()
+        .then(response => {
+          console.log(response);
+          if (!response.token) {
+            setRedirectSync(true);
+            return;
+          }
+          console.log('token', response.token);
+          setIsConnected(true);
+          setToken(response.token);
+        });
     }
 
-    loadTasks();
-  }, [filterActivated, isConnected]);
+    if (isConnected && token) {
+      loadTasks();
+    }
+  }, [filterActivated, token, isConnected]);
 
   return (
     <Container>
