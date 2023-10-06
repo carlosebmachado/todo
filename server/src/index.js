@@ -11,7 +11,9 @@ const server = express();
 server.use(cors());
 server.use(express.json());
 server.use('/task', TaskRoutes);
+server.use('/user', UserRoutes);
+server.use('/auth', AuthRoutes);
 
-server.listen(3333, () => {
-  console.log('Server running on port 3333.');
+server.listen(process.env.PORT, () => {
+  console.log(`Server running on port ${process.env.PORT}.`);
 });
