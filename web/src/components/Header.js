@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Link, Redirect } from 'react-router-dom';
 
 import api from '../services/api';
+import SessionStore from '../utils/SessionStore';
 
 import { BsBell } from 'react-icons/bs';
 import ContentWrapper from './styled-components/ContentWrapperBase';
@@ -10,12 +11,14 @@ import constants from '../constants';
 
 
 export default function Header(props) {
+  const [token, setToken] = useState('');
   const [lateCount, setLateCount] = useState(0);
-  const [isConnected, setIsConnected] = useState(true);
+  const [isConnected, setIsConnected] = useState(false);
   const [logout, setLogout] = useState(false);
 
   async function handleLogout() {
-    localStorage.removeItem('@todo/macaddress');
+    // localStorage.removeItem('@todo/macaddress');
+    SessionStore.signout();
     setLogout(true);
     // window.location.reload();
     // useNavigate('/login');
@@ -24,14 +27,27 @@ export default function Header(props) {
   // trigger loadTasks based on filterActivated
   useEffect(() => {
     async function lateVerify() {
-      await api.get(`/task/filter/late/${isConnected}`)
+      await api(token).get(`/task/filter/late`)
         .then(response => {
           setLateCount(response.data.length);
         })
     }
 
-    lateVerify();
-  }, []);
+    if (!isConnected) {
+      SessionStore.getData()
+        .then(response => {
+          if (!response.token) {
+            return;
+          }
+          setIsConnected(true);
+          setToken(response.token);
+        });
+    }
+
+    if (isConnected && token) {
+      lateVerify();
+    }
+  }, [isConnected, token]);
 
   return (
     <Container>
