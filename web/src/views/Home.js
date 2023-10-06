@@ -46,7 +46,6 @@ export default function Home(props) {
             setRedirectSync(true);
             return;
           }
-          console.log('token', response.token);
           setIsConnected(true);
           setToken(response.token);
         });

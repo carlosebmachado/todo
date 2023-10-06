@@ -27,7 +27,7 @@ export default function Login() {
     }
 
     try {
-      const response = await api.post('/auth/login', {
+      const response = await api('').post('/auth/login', {
         username,
         password
       });
@@ -50,12 +50,21 @@ export default function Login() {
       setRedirectHome(true);
     }
 
+    if (!isConnected) {
+      SessionStore.getData()
+        .then(response => {
+          if (response.token) {
+            setRedirectHome(true);
+          }
+        });
+    }
+
   }, [isConnected]);
 
   return (
     <Container>
 
-      {redirectHome && <Redirect to="/" />}
+      {redirectHome && <Redirect to="/home" />}
 
       <Header clickNotification={() => { }} />
 
