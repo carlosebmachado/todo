@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 
+import api from '../services/api';
+import SessionStore from '../utils/SessionStore';
+
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import constants from '../constants';
@@ -9,13 +12,13 @@ import constants from '../constants';
 
 export default function Register() {
   const [redirectHome, setRedirectHome] = useState(false);
-  const [fullName, setFullName] = useState('');
+  const [name, setFullName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isConnected, setIsConnected] = useState(false);
 
   async function onRegisterClick() {
-    if (!fullName) {
+    if (!name) {
       alert('You need to enter your full name.');
       return;
     }
@@ -27,6 +30,24 @@ export default function Register() {
       alert('You need to enter your password.');
       return;
     }
+
+    try {
+      const response = await api.post('/auth/register', {
+        name,
+        username,
+        password
+      });
+      await SessionStore.signin({
+        userId: response.data.userId,
+        username: username,
+        name: name,
+        token: response.data.token
+      });
+    } catch (error) {
+      alert('Error on register.');
+      return;
+    }
+
     setIsConnected(true);
   }
 
@@ -48,7 +69,7 @@ export default function Register() {
         <h1>REGISTER</h1>
         <UserDataWrapper>
           <small>Enter register data</small>
-          <input placeholder='full name...' type="text" onChange={e => setFullName(e.target.value)} value={fullName} />
+          <input placeholder='full name...' type="text" onChange={e => setFullName(e.target.value)} value={name} />
           <input placeholder='username...' type="text" onChange={e => setUsername(e.target.value)} value={username} />
           <input placeholder='password...' type="password" onChange={e => setPassword(e.target.value)} value={password} />
           <a href="/login">Already have an account?</a>

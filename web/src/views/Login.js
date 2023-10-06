@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 
+import api from '../services/api';
+import SessionStore from '../utils/SessionStore';
+
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import constants from '../constants';
@@ -22,6 +25,23 @@ export default function Login() {
       alert('You need to enter your password.');
       return;
     }
+
+    try {
+      const response = await api.post('/auth/login', {
+        username,
+        password
+      });
+      await SessionStore.signin({
+        userId: response.data.userId,
+        username: username,
+        name: response.data.name,
+        token: response.data.token
+      });
+    } catch (error) {
+      alert('Wrong username or password.');
+      return;
+    }
+
     setIsConnected(true);
   }
 
