@@ -5,14 +5,16 @@ import { format } from 'date-fns';
 
 // import typeIcons from '../utils/typeicons'
 import api from '../services/api';
+import SessionStore from '../utils/SessionStore';
 
 import Header from '../components/Header';
-import Footer from '../components/Footer';
+// import Footer from '../components/Footer';
 import TypeIcon from '../components/styled-components/TypeIcon';
 import TypeIconWrapper from '../components/styled-components/TypeIconWrapper';
 import constants from '../constants';
 
-export default (props) => {
+export default function Task(props) {
+  const [token, setToken] = useState('');
   const [redirectHome, setRedirectHome] = useState(false);
   const [redirectSync, setRedirectSync] = useState(false);
   const [type, setType] = useState('');
@@ -39,7 +41,7 @@ export default (props) => {
 
     // if id has setted, we update
     if (props.match.params.id) {
-      await api.put(`/task/${props.match.params.id}`, {
+      await api(token).put(`/task/${props.match.params.id}`, {
         macaddress: isConnected,
         done,
         type,
@@ -64,7 +66,7 @@ export default (props) => {
         });
       // else insert
     } else {
-      await api.post('/task', {
+      await api(token).post('/task', {
         macaddress: isConnected,
         type,
         title,
@@ -95,7 +97,7 @@ export default (props) => {
   async function handleDelete() {
     const res = window.confirm('Do you really want to remove the task?');
     if (res === true) {
-      await api.delete(`/task/${props.match.params.id}`)
+      await api(token).delete(`/task/${props.match.params.id}`)
         .then(() => {
           setRedirectHome(true);
         })
@@ -148,11 +150,19 @@ export default (props) => {
     }
 
     if (!isConnected) {
-      // setRedirectSync(true);
+      SessionStore.getData()
+        .then(response => {
+          if (!response.token) {
+            setRedirectSync(true);
+            return;
+          }
+          setIsConnected(true);
+          setToken(response.token);
+        });
     }
 
     loadTask();
-  }, [props.match.params.id]);
+  }, [props.match.params.id, isConnected]);
 
   return (
     <Container>
@@ -167,7 +177,7 @@ export default (props) => {
             Array.from(Array(9).keys()).map((i) => (
               i > 1 &&
               <button key={(i).toString()} onClick={() => setType(i)}>
-                <TypeIconWrapper style={{ padding: 8 }}>
+                <TypeIconWrapper active={i === type} style={{ padding: 8 }}>
                   <TypeIcon size={25} type={i} />
                 </TypeIconWrapper>
               </button>
@@ -271,6 +281,7 @@ export const Input = styled.div`
 
     &:focus {
       outline: none;
+      border-bottom: 2px solid ${constants.colors.primary};
     }
   }
 
@@ -297,6 +308,7 @@ export const TextArea = styled.div`
 
     &:focus {
       outline: none;
+      border: 2px solid ${constants.colors.primary};
     }
 
     &::-webkit-resizer {

@@ -6,7 +6,7 @@ export default styled.div`
   align-items: center;
   justify-content: center;
   padding: 4px;
-  background-color: ${constants.colors.primary};
+  background-color: ${props => props.active ? constants.colors.secondary : constants.colors.primary};
   border-radius: 50%;
   color: white;
 `;
