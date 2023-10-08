@@ -125,6 +125,7 @@ export const UserDataWrapper = styled.div`
     
     &:focus {
       outline: none;
+      border-bottom: 2px solid ${constants.colors.primary};
     }
 
     &:last-of-type {

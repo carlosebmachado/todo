@@ -6,7 +6,7 @@ import constants from '../constants';
 export default function Checkbox(props) {
   return (
     <Container>
-      <input type="checkbox" checked={props.checked} onClick={props.setChecked} />
+      <input type="checkbox" checked={props.checked} onChange={props.onChange} />
       <Checkmark className='checkmark' />
     </Container>
   );

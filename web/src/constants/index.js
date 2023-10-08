@@ -1,4 +1,4 @@
-export default {
+const constants = {
   colors: {
     primary: "#35bcec",
     secondary: "#46529c",
@@ -19,3 +19,5 @@ export default {
     dark500: "#1C1F22 ",
   }
 };
+
+export default constants;

@@ -1,14 +1,17 @@
 import styled, { keyframes } from 'styled-components'
 import constants from '../constants';
 
-export default function Loading({ size = 32 }) {
+export default function Loading({ show = true, size = 32, opacity = 1 }) {
 
   return (
-    <Container>
-      <Spinner size={size}>
-        <div></div>
-      </Spinner>
-    </Container>
+    show ?
+      <Container opacity={opacity}>
+        <Spinner size={size}>
+          <div></div>
+        </Spinner>
+      </Container>
+      :
+      <></>
   );
 }
 
@@ -20,18 +23,20 @@ const rotate = keyframes`
 `;
 
 const Container = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: none;
+  background: rgba(255, 255, 255, ${props => props.opacity});
+  z-index: 999;
 `;
 
 const Spinner = styled.div`
-  background-color: red;
-
   position: relative;
   transform: translateZ(0) scale(1);
   backface-visibility: hidden;
