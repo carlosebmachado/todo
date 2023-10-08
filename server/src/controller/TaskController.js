@@ -1,3 +1,4 @@
+const { ca } = require('date-fns/locale');
 const TaskModel = require('../model/TaskModel');
 const {
   startOfDay,
@@ -48,23 +49,24 @@ class TaskController {
   }
 
   async show(req, res) {
-    await TaskModel.findById(req.params.id)
-      .then(response => {
-        if (response)
-          return res.status(200).json(response);
-        else
-          return res.status(404).json({ error: 'task not found' });
-      })
-      .catch(error => {
-        return res.status(500).json(error);
-      });
+    try {
+      const taks = await TaskModel.findById(req.params.id);
+
+      if (!taks) {
+        res.status(404).json({ error: 'task not found' });
+        return;
+      }
+      res.status(200).json(taks);
+    } catch (error) {
+      res.status(500).json(error);
+    }
   }
 
   async all(req, res) {
     await TaskModel.find({ userId: { '$in': req.userId } })
       .sort('when')
-      .then(response => {
-        return res.status(200).json(response);
+      .then(task => {
+        return res.status(200).json(task);
       })
       .catch(error => {
         return res.status(500).json(error);
@@ -72,16 +74,12 @@ class TaskController {
   }
 
   async done(req, res) {
-    await TaskModel.findByIdAndUpdate(
-      { '_id': req.params.id },
-      { 'done': req.params.done },
-      { new: true })
-      .then(response => {
-        return res.status(200).json(response);
-      })
-      .catch(error => {
-        return res.status(500).json(error);
-      });
+    try {
+      const task = await TaskModel.findByIdAndUpdate(req.params.id, { 'done': req.params.done }, { useFindAndModify: false, new: true });
+      res.status(200).json(task);
+    } catch (error) {
+      res.status(500).json(error);
+    }
   }
 
   async late(req, res) {
@@ -91,8 +89,8 @@ class TaskController {
       'userId': { '$in': req.userId }
     })
       .sort('when')
-      .then(response => {
-        return res.status(200).json(response);
+      .then(task => {
+        return res.status(200).json(task);
       })
       .catch(error => {
         return res.status(500).json(error);
@@ -119,8 +117,8 @@ class TaskController {
       'when': { '$gte': startOfWeek(current), '$lte': endOfWeek(current) }
     })
       .sort('when')
-      .then(response => {
-        return res.status(200).json(response);
+      .then(task => {
+        return res.status(200).json(task);
       })
       .catch(error => {
         return res.status(500).json(error);
@@ -133,8 +131,8 @@ class TaskController {
       'when': { '$gte': startOfMonth(current), '$lte': endOfMonth(current) }
     })
       .sort('when')
-      .then(response => {
-        return res.status(200).json(response);
+      .then(task => {
+        return res.status(200).json(task);
       })
       .catch(error => {
         return res.status(500).json(error);
@@ -147,8 +145,8 @@ class TaskController {
       'when': { '$gte': startOfYear(current), '$lte': endOfYear(current) }
     })
       .sort('when')
-      .then(response => {
-        return res.status(200).json(response);
+      .then(task => {
+        return res.status(200).json(task);
       })
       .catch(error => {
         return res.status(500).json(error);
