@@ -3,17 +3,18 @@ import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 import { format } from 'date-fns';
 
-// import typeIcons from '../utils/typeicons'
 import api from '../services/api';
 import SessionStore from '../utils/SessionStore';
-
-import Header from '../components/Header';
-// import Footer from '../components/Footer';
-import TypeIcon from '../components/styled-components/TypeIcon';
-import TypeIconWrapper from '../components/styled-components/TypeIconWrapper';
 import constants from '../constants';
 
+import Loading from '../components/Loading';
+import Header from '../components/Header';
+import TypeIcon from '../components/styled-components/TypeIcon';
+import TypeIconWrapper from '../components/styled-components/TypeIconWrapper';
+
+
 export default function Task(props) {
+  const [isLoading, setIsLoading] = useState(true);
   const [token, setToken] = useState('');
   const [redirectHome, setRedirectHome] = useState(false);
   const [redirectSync, setRedirectSync] = useState(false);
@@ -28,21 +29,30 @@ export default function Task(props) {
   // save task
   async function handleSave() {
     // data validation
-    if (!type)
-      return alert('The Task type is missing');
-    else if (!title)
-      return alert('The Task title is missing');
-    else if (!description)
-      return alert('The Task description is missing');
-    else if (!date)
-      return alert('The Task date is missing');
-    else if (!hour)
-      return alert('The Task hour is missing');
+    if (!type) {
+      alert('The Task type is missing');
+      return;
+    }
+    if (!title) {
+      alert('The Task title is missing');
+      return;
+    }
+    if (!description) {
+      alert('The Task description is missing');
+      return;
+    }
+    if (!date) {
+      alert('The Task date is missing');
+      return;
+    }
+    if (!hour) {
+      alert('The Task hour is missing');
+      return;
+    }
 
-    // if id has setted, we update
+    // if id has setted, update
     if (props.match.params.id) {
       await api(token).put(`/task/${props.match.params.id}`, {
-        macaddress: isConnected,
         done,
         type,
         title,
@@ -53,16 +63,7 @@ export default function Task(props) {
           setRedirectHome(true);
         })
         .catch(error => {
-          if (error.response) {
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-          } else if (error.request) {
-            console.log(error.request);
-          } else {
-            console.log('Error', error.message);
-          }
-          console.log(error.config);
+          alert('Error updating task');
         });
       // else insert
     } else {
@@ -77,41 +78,20 @@ export default function Task(props) {
           setRedirectHome(true);
         })
         .catch(error => {
-          alert(error);
-        })
-        .catch(error => {
-          if (error.response) {
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-          } else if (error.request) {
-            console.log(error.request);
-          } else {
-            console.log('Error', error.message);
-          }
-          console.log(error.config);
+          alert('Error inserting task');
         });
     }
   }
 
   async function handleDelete() {
-    const res = window.confirm('Do you really want to remove the task?');
-    if (res === true) {
+    const confirm = window.confirm('Do you really want to remove the task?');
+    if (confirm) {
       await api(token).delete(`/task/${props.match.params.id}`)
         .then(() => {
           setRedirectHome(true);
         })
         .catch(error => {
-          if (error.response) {
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-          } else if (error.request) {
-            console.log(error.request);
-          } else {
-            console.log('Error', error.message);
-          }
-          console.log(error.config);
+          alert('Error deleting task');
         });
     }
   }
@@ -120,33 +100,36 @@ export default function Task(props) {
     setRedirectHome(true);
   }
 
-  // trigger loadTasks based on filterActivated
   useEffect(() => {
-
     async function loadTask() {
-      if (props.match.params.id) {
-        await api.get(`/task/${props.match.params.id}`)
-          .then(response => {
-            setType(response.data.type);
-            setTitle(response.data.title);
-            setDone(response.data.done);
-            setDescription(response.data.description);
-            setDate(format(new Date(response.data.when), 'yyyy-MM-dd'));
-            setHour(format(new Date(response.data.when), 'HH:mm'));
-          })
-          .catch(error => {
-            if (error.response) {
-              console.log(error.response.data);
-              console.log(error.response.status);
-              console.log(error.response.headers);
-            } else if (error.request) {
-              console.log(error.request);
-            } else {
-              console.log('Error', error.message);
-            }
-            console.log(error.config);
-          });
+      if (!props.match.params.id) {
+        setIsLoading(false);
+        return;
       }
+
+      if (!isConnected || !token) {
+        return;
+      }
+
+      if (!isLoading) {
+        return;
+      }
+
+      await api(token).get(`/task/${props.match.params.id}`)
+        .then(response => {
+          setType(response.data.type);
+          setTitle(response.data.title);
+          setDone(response.data.done);
+          setDescription(response.data.description);
+          setDate(format(new Date(response.data.when), 'yyyy-MM-dd'));
+          setHour(format(new Date(response.data.when), 'HH:mm'));
+        })
+        .catch(_ => {
+          alert('Error loading task');
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     }
 
     if (!isConnected) {
@@ -158,15 +141,20 @@ export default function Task(props) {
           }
           setIsConnected(true);
           setToken(response.token);
+        })
+        .catch(_ => {
+          setRedirectSync(true);
         });
     }
 
     loadTask();
-  }, [props.match.params.id, isConnected]);
+  }, [props.match.params.id, isConnected, isLoading, token]);
 
-  return (
+  return (isLoading ?
+    <Loading />
+    :
     <Container>
-      {redirectHome && <Redirect to="/" />}
+      {redirectHome && <Redirect to="/home" />}
       {redirectSync && <Redirect to="/sync" />}
 
       <Header clickNotification={handleClickNotification} />
@@ -195,19 +183,21 @@ export default function Task(props) {
           <textarea rows={5} placeholder="task description..." onChange={e => setDescription(e.target.value)} value={description} />
         </TextArea>
 
-        <Input>
-          <span>Date</span>
-          <input type="date" placeholder="task date..." onChange={e => setDate(e.target.value)} value={date} />
-        </Input>
+        <div style={{ display: 'flex' }}>
+          <Input style={{ marginRight: 15 }}>
+            <span>Date</span>
+            <input type="date" onChange={e => setDate(e.target.value)} value={date} />
+          </Input>
 
-        <Input>
-          <span>Hour</span>
-          <input type="time" placeholder="task date..." onChange={e => setHour(e.target.value)} value={hour} />
-        </Input>
+          <Input>
+            <span>Time</span>
+            <input type="time" onChange={e => setHour(e.target.value)} value={hour} />
+          </Input>
+        </div>
 
         <Options>
           <div>
-            <input type="checkbox" onChange={e => setDone(!done)} checked={done} />
+            <input type="checkbox" onChange={_ => setDone(!done)} checked={done} />
             <span>DONE</span>
           </div>
           {props.match.params.id && <button onClick={handleDelete}>DELETE</button>}
@@ -218,8 +208,6 @@ export default function Task(props) {
         </Save>
 
       </Form>
-
-      {/* <Footer /> */}
 
     </Container>
   );
