@@ -35,7 +35,7 @@ export default function TaskCard({ id, type, title, when, done, ...props }) {
       .then((response) => {
         setTaskDone(response.data.done);
       })
-      .catch(error => {
+      .catch(_ => {
         alert('Error updating task');
       });
     _.preventDefault();

@@ -12,6 +12,8 @@ import TaskCard from '../components/TaskCard';
 import ContentWrapperBase from '../components/styled-components/ContentWrapperBase';
 import Loading from '../components/Loading';
 
+import emptyImage from '../assets/undraw_empty_re_opql.svg';
+
 
 export default function Home() {
   const [isBusy, setIsBusy] = useState(false);
@@ -78,7 +80,10 @@ export default function Home() {
               <TaskCard key={i.toString()} id={t._id} type={t.type} title={t.title} when={t.when} done={t.done} />
             ))
             :
-            <h1>No tasks found</h1>
+            <NoTasksWrapper>
+              <h1>No tasks found :(</h1>
+              <img src={emptyImage} alt="No tasks found" />
+            </NoTasksWrapper>
           }
         </CardWrapper>
 
@@ -107,4 +112,23 @@ const CardWrapper = styled(ContentWrapperBase)`
   margin-top: 25px;
   box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.15);
   border-radius: 10px;
+`;
+
+const NoTasksWrapper = styled.div`
+  width: 100%;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  h1 {
+    color: ${constants.colors.dark200};
+    font-size: 1.2rem;
+  }
+
+  image {
+    width: 100px;
+    height: 100px;
+  }
 `;
