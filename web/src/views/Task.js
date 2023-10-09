@@ -48,27 +48,6 @@ export default function Task(props) {
       }, errorMessageTimeout);
       return;
     }
-    if (!description) {
-      setErrorMessage('The Task description is missing.');
-      setTimeout(() => {
-        setErrorMessage('');
-      }, errorMessageTimeout);
-      return;
-    }
-    if (!date) {
-      setErrorMessage('The Task date is missing.');
-      setTimeout(() => {
-        setErrorMessage('');
-      }, errorMessageTimeout);
-      return;
-    }
-    if (!hour) {
-      setErrorMessage('The Task time is missing.');
-      setTimeout(() => {
-        setErrorMessage('');
-      }, errorMessageTimeout);
-      return;
-    }
 
     // if id has setted, update
     if (props.match.params.id) {
