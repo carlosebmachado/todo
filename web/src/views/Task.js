@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
-import { format } from 'date-fns';
+import { format, set } from 'date-fns';
 
 import api from '../services/api';
 import SessionStore from '../utils/SessionStore';
@@ -14,6 +14,7 @@ import TypeIconWrapper from '../components/styled-components/TypeIconWrapper';
 
 
 export default function Task(props) {
+  const [isBusy, setIsBusy] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [token, setToken] = useState('');
   const [redirectHome, setRedirectHome] = useState(false);
@@ -28,6 +29,8 @@ export default function Task(props) {
 
   // save task
   async function handleSave() {
+    setIsBusy(true);
+
     // data validation
     if (!type) {
       alert('The Task type is missing');
@@ -62,8 +65,11 @@ export default function Task(props) {
         .then(() => {
           setRedirectHome(true);
         })
-        .catch(error => {
+        .catch(_ => {
           alert('Error updating task');
+        })
+        .finally(() => {
+          setIsBusy(false);
         });
       // else insert
     } else {
@@ -77,8 +83,11 @@ export default function Task(props) {
         .then(() => {
           setRedirectHome(true);
         })
-        .catch(error => {
+        .catch(_ => {
           alert('Error inserting task');
+        })
+        .finally(() => {
+          setIsBusy(false);
         });
     }
   }
@@ -90,8 +99,11 @@ export default function Task(props) {
         .then(() => {
           setRedirectHome(true);
         })
-        .catch(error => {
+        .catch(_ => {
           alert('Error deleting task');
+        })
+        .finally(() => {
+          setIsBusy(false);
         });
     }
   }

@@ -25,17 +25,24 @@ export default function Home() {
   const [isConnected, setIsConnected] = useState(false);
 
   function notification() {
-    setFilterActivated('late');
+    setFilter('late');
+  }
+
+  function setFilter(filter) {
+    setIsBusy(true);
+    setFilterActivated(filter);
   }
 
   useEffect(() => {
     async function loadTasks() {
       await api(token).get(`/task/filter/${filterActivated}`)
         .then(response => {
-          // console.log(response.data);
           setTasks(response.data);
           setIsLoading(false);
         })
+        .finally(() => {
+          setIsBusy(false);
+        });
     }
 
     if (!isConnected) {
@@ -67,11 +74,11 @@ export default function Home() {
         <Header clickNotification={notification} />
 
         <FilterWrapper>
-          <FilterCard title="All" actived={filterActivated === 'all'} onClick={() => setFilterActivated('all')} />
-          <FilterCard title="Today" actived={filterActivated === 'today'} onClick={() => setFilterActivated('today')} />
-          <FilterCard title="Week" actived={filterActivated === 'week'} onClick={() => setFilterActivated('week')} />
-          <FilterCard title="Month" actived={filterActivated === 'month'} onClick={() => setFilterActivated('month')} />
-          <FilterCard title="Year" actived={filterActivated === 'year'} onClick={() => setFilterActivated('year')} />
+          <FilterCard title="All" actived={filterActivated === 'all'} onClick={() => setFilter('all')} />
+          <FilterCard title="Today" actived={filterActivated === 'today'} onClick={() => setFilter('today')} />
+          <FilterCard title="Week" actived={filterActivated === 'week'} onClick={() => setFilter('week')} />
+          <FilterCard title="Month" actived={filterActivated === 'month'} onClick={() => setFilter('month')} />
+          <FilterCard title="Year" actived={filterActivated === 'year'} onClick={() => setFilter('year')} />
         </FilterWrapper>
 
         <CardWrapper>
@@ -82,7 +89,7 @@ export default function Home() {
             :
             <NoTasksWrapper>
               <h1>No tasks found :(</h1>
-              <img src={emptyImage} alt="No tasks found" />
+              <img width={250} src={emptyImage} alt="No tasks found" />
             </NoTasksWrapper>
           }
         </CardWrapper>
@@ -115,8 +122,8 @@ const CardWrapper = styled(ContentWrapperBase)`
 `;
 
 const NoTasksWrapper = styled.div`
+  padding: 20px;
   width: 100%;
-  height: 300px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -125,10 +132,6 @@ const NoTasksWrapper = styled.div`
   h1 {
     color: ${constants.colors.dark200};
     font-size: 1.2rem;
-  }
-
-  image {
-    width: 100px;
-    height: 100px;
+    margin-bottom: 20px;
   }
 `;
