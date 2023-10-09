@@ -4,13 +4,15 @@ import styled from 'styled-components';
 
 import api from '../services/api';
 import SessionStore from '../utils/SessionStore';
+import constants from '../constants';
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import constants from '../constants';
+import ErrorMessage, { errorMessageTimeout } from '../components/ErrorMessage';
 
 
 export default function Login() {
+  const [errorMessage, setErrorMessage] = useState('');
   const [redirectHome, setRedirectHome] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -18,11 +20,17 @@ export default function Login() {
 
   async function onSigninClick() {
     if (!username) {
-      alert('You need to enter your username.');
+      setErrorMessage('You need to enter your username.');
+      setTimeout(() => {
+        setErrorMessage('');
+      }, errorMessageTimeout);
       return;
     }
     if (!password) {
-      alert('You need to enter your password.');
+      setErrorMessage('You need to enter your password.');
+      setTimeout(() => {
+        setErrorMessage('');
+      }, errorMessageTimeout);
       return;
     }
 
@@ -37,12 +45,14 @@ export default function Login() {
         name: response.data.name,
         token: response.data.token
       });
+      setIsConnected(true);
     } catch (error) {
-      alert('Wrong username or password.');
+      setErrorMessage('Wrong username or password.');
+      setTimeout(() => {
+        setErrorMessage('');
+      }, errorMessageTimeout);
       return;
     }
-
-    setIsConnected(true);
   }
 
   useEffect(() => {
@@ -74,8 +84,9 @@ export default function Login() {
           <small>Enter login data</small>
           <input placeholder='username...' type="text" onChange={e => setUsername(e.target.value)} value={username} />
           <input placeholder='password...' type="password" onChange={e => setPassword(e.target.value)} value={password} />
-          <a href="/register">Don't have an account?</a>
+          {errorMessage && <ErrorMessage error={errorMessage} />}
           <button onClick={onSigninClick}>Sign in</button>
+          <a href="/register">Don't have an account?</a>
         </UserDataWrapper>
       </Content>
 
@@ -138,7 +149,7 @@ export const UserDataWrapper = styled.div`
   a {
     color: ${constants.colors.primary};
     text-decoration: none;
-    margin-bottom: 20px;
+    margin-top: 20px;
   }
 
   button {

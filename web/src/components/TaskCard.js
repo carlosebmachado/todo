@@ -11,11 +11,9 @@ import SessionStore from '../utils/SessionStore';
 import Checkbox from './Checkbox';
 import TypeIcons from './styled-components/TypeIcon';
 import TypeIconWrapper from './styled-components/TypeIconWrapper';
-import Loading from './Loading';
 
 
 export default function TaskCard({ id, type, title, when, done, ...props }) {
-  const [isLoading, setIsLoading] = useState(true);
   const [token, setToken] = useState('');
   const [isConnected, setIsConnected] = useState(false);
   const [taskDone, setTaskDone] = useState(done);

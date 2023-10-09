@@ -4,13 +4,15 @@ import styled from 'styled-components';
 
 import api from '../services/api';
 import SessionStore from '../utils/SessionStore';
+import constants from '../constants';
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import constants from '../constants';
+import ErrorMessage, { errorMessageTimeout } from '../components/ErrorMessage';
 
 
 export default function Register() {
+  const [errorMessage, setErrorMessage] = useState('');
   const [redirectHome, setRedirectHome] = useState(false);
   const [name, setFullName] = useState('');
   const [username, setUsername] = useState('');
@@ -19,15 +21,24 @@ export default function Register() {
 
   async function onRegisterClick() {
     if (!name) {
-      alert('You need to enter your full name.');
+      setErrorMessage('You need to enter a display name.');
+      setTimeout(() => {
+        setErrorMessage('');
+      }, errorMessageTimeout);
       return;
     }
     if (!username) {
-      alert('You need to enter your username.');
+      setErrorMessage('You need to enter a username.');
+      setTimeout(() => {
+        setErrorMessage('');
+      }, errorMessageTimeout);
       return;
     }
     if (!password) {
-      alert('You need to enter your password.');
+      setErrorMessage('You need to enter a password.');
+      setTimeout(() => {
+        setErrorMessage('');
+      }, errorMessageTimeout);
       return;
     }
 
@@ -44,7 +55,10 @@ export default function Register() {
         token: response.data.token
       });
     } catch (error) {
-      alert('Error on register.');
+      setErrorMessage('An error occurred while trying to register.');
+      setTimeout(() => {
+        setErrorMessage('');
+      }, errorMessageTimeout);
       return;
     }
 
@@ -69,11 +83,12 @@ export default function Register() {
         <h1>REGISTER</h1>
         <UserDataWrapper>
           <small>Enter register data</small>
-          <input placeholder='full name...' type="text" onChange={e => setFullName(e.target.value)} value={name} />
+          <input placeholder='display name...' type="text" onChange={e => setFullName(e.target.value)} value={name} />
           <input placeholder='username...' type="text" onChange={e => setUsername(e.target.value)} value={username} />
           <input placeholder='password...' type="password" onChange={e => setPassword(e.target.value)} value={password} />
-          <a href="/login">Already have an account?</a>
+          {errorMessage && <ErrorMessage error={errorMessage} />}
           <button onClick={onRegisterClick}>REGISTER</button>
+          <a href="/login">Already have an account?</a>
         </UserDataWrapper>
       </Content>
 
@@ -136,7 +151,7 @@ export const UserDataWrapper = styled.div`
   a {
     color: ${constants.colors.primary};
     text-decoration: none;
-    margin-bottom: 20px;
+    margin-top: 20px;
   }
 
   button {

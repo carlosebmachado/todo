@@ -17,6 +17,9 @@ const constants = {
     dark300: "#373a3e",
     dark400: "#25272c",
     dark500: "#1C1F22 ",
+  },
+  settings: {
+    errorMessageTimeout: 5000
   }
 };
 

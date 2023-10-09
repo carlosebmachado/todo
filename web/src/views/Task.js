@@ -11,9 +11,11 @@ import Loading from '../components/Loading';
 import Header from '../components/Header';
 import TypeIcon from '../components/styled-components/TypeIcon';
 import TypeIconWrapper from '../components/styled-components/TypeIconWrapper';
+import ErrorMessage, { errorMessageTimeout } from '../components/ErrorMessage';
 
 
 export default function Task(props) {
+  const [errorMessage, setErrorMessage] = useState('');
   const [isBusy, setIsBusy] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [token, setToken] = useState('');
@@ -33,23 +35,38 @@ export default function Task(props) {
 
     // data validation
     if (!type) {
-      alert('The Task type is missing');
+      setErrorMessage('The Task type is missing.');
+      setTimeout(() => {
+        setErrorMessage('');
+      }, errorMessageTimeout);
       return;
     }
     if (!title) {
-      alert('The Task title is missing');
+      setErrorMessage('The Task title is missing.');
+      setTimeout(() => {
+        setErrorMessage('');
+      }, errorMessageTimeout);
       return;
     }
     if (!description) {
-      alert('The Task description is missing');
+      setErrorMessage('The Task description is missing.');
+      setTimeout(() => {
+        setErrorMessage('');
+      }, errorMessageTimeout);
       return;
     }
     if (!date) {
-      alert('The Task date is missing');
+      setErrorMessage('The Task date is missing.');
+      setTimeout(() => {
+        setErrorMessage('');
+      }, errorMessageTimeout);
       return;
     }
     if (!hour) {
-      alert('The Task hour is missing');
+      setErrorMessage('The Task time is missing.');
+      setTimeout(() => {
+        setErrorMessage('');
+      }, errorMessageTimeout);
       return;
     }
 
@@ -166,6 +183,8 @@ export default function Task(props) {
     <Loading />
     :
     <Container>
+      <Loading show={isBusy} opacity={.75} />
+
       {redirectHome && <Redirect to="/home" />}
       {redirectSync && <Redirect to="/sync" />}
 
@@ -214,6 +233,8 @@ export default function Task(props) {
           </div>
           {props.match.params.id && <button onClick={handleDelete}>DELETE</button>}
         </Options>
+
+        {errorMessage && <ErrorMessage error={errorMessage} />}
 
         <Save>
           <button onClick={handleSave}>SAVE</button>
