@@ -1,13 +1,21 @@
 const jwt = require('jsonwebtoken');
-const UserController = require('./UserController');
 const UserModel = require('../model/UserModel');
+const bcrypt = require('bcrypt');
 
 class AuthController {
 
   async register(req, res) {
     const { username, password, name } = req.body;
 
-    const user = new UserModel({ username, password, name });
+    var hash;
+    try {
+      hash = await bcrypt.hash(password, 10)
+    } catch (err) {
+      res.status(500).send(err.message);
+      return;
+    }
+
+    const user = new UserModel({ username, password: hash, name });
 
     try {
       await user.save();
@@ -29,7 +37,9 @@ class AuthController {
       return;
     }
 
-    if (password !== user.password) {
+    var samePwd = await bcrypt.compare(password, user.password);
+
+    if (!samePwd) {
       res.status(401).json({ error: 'invalid auth' });
       return;
     }
