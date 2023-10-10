@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
-import { format, set } from 'date-fns';
+import { format } from 'date-fns';
 
 import api from '../services/api';
 import SessionStore from '../utils/SessionStore';
