@@ -8,6 +8,7 @@ import constants from '../constants';
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import Loading from '../components/Loading';
 import ErrorMessage, { errorMessageTimeout } from '../components/ErrorMessage';
 
 
@@ -78,6 +79,7 @@ export default function Login() {
 
   return (
     <Container>
+      <Loading show={isBusy} opacity={.75} />
 
       {redirectHome && <Redirect to="/home" />}
 
