@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'rea
 import { StyleSheet } from "react-native";
 
 import api from '../services/api';
+import constants from '../constants';
 
 // components
 import Header from '../components/Header';
@@ -23,15 +24,17 @@ export default function Home(props) {
   }
 
   async function loadTasks() {
-    setLoad(true);
-    await api.get(`/task/filter/${filter}/11:11:11:11:11:11`)
-    .then(response =>{
-      setTasks(response.data);
-    })
-    .catch(error => {
+    // setLoad(true);
+    // await api.get(`/task/filter/${filter}`)
+    //   .then(response => {
+    //     setTasks(response.data);
+    //   })
+    //   .catch(error => {
 
-    });
-    setLoad(false);
+    //   })
+    //   .finally(() => {
+    //     setLoad(false);
+    //   });
   }
 
   useEffect(() => {
@@ -67,11 +70,21 @@ export default function Home(props) {
       <ScrollView style={styles.cards} contentContainerStyle={{ alignItems: 'center' }}>
         {
           load ?
-          <ActivityIndicator color={'#F9AA33'} size={50} />
-          :
-          tasks.map((t, i) => (
-            <TaskCard key={i/*t.id*/} title={t.title} when={t.when} done={t.done} type={t.type} />
-          ))
+            <ActivityIndicator color={constants.colors.primary} size={50} />
+            :
+            <>
+              {tasks.map((t, i) => (
+                <TaskCard key={i} id={t._id} title={t.title} when={t.when} done={t.done} type={t.type} />
+              ))}
+              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={1} />
+              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={2} />
+              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={3} />
+              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={4} />
+              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={5} />
+              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={6} />
+              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={7} />
+              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={8} />
+            </>
         }
       </ScrollView>
 
@@ -90,11 +103,11 @@ const styles = StyleSheet.create({
   title: {
     width: '100%',
     borderBottomWidth: 1,
-    borderColor: '#344955',
+    borderColor: constants.colors.dark500,
     alignItems: 'center'
   },
   titleText: {
-    color: '#344955',
+    color: constants.colors.dark500,
     fontSize: 18,
     position: 'relative',
     top: 11,
@@ -105,21 +118,22 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 70,
     flexDirection: 'row',
-    alignItems:  'center',
+    alignItems: 'center',
     justifyContent: 'space-around'
   },
   filterTextActived: {
     fontWeight: 'bold',
     fontSize: 18,
-    color: '#F9AA33'
+    color: constants.colors.primary
   },
   filterTextInactived: {
     fontWeight: 'bold',
     fontSize: 18,
-    color: '#344955',
+    color: constants.colors.dark500,
     opacity: 0.5
   },
   cards: {
+    flex: 1,
     width: '100%',
     marginTop: 30
   }

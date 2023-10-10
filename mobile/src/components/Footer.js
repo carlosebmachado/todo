@@ -1,20 +1,23 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { StyleSheet } from "react-native";
+import { FontAwesome5 } from '@expo/vector-icons';
 
-// icons
-import iconAdd from '../assets/add.png';
-import iconConfirm from '../assets/confirm.png';
+import constants from '../constants';
 
 export default function Footer(props) {
   return (
     <View style={styles.footer}>
-      
-      <TouchableOpacity style={styles.button} onPress={props.onPress}>
-        <Image source={props.icon === 'add' ? iconAdd : iconConfirm} style={styles.buttonImage} />
-      </TouchableOpacity>
 
-      <Text style={styles.text}>Organizing your life</Text>
+      <TouchableOpacity style={styles.button} onPress={props.onPress}>
+        <View style={styles.buttonImage}>
+          {props.icon === 'add' ?
+            <FontAwesome5 name="plus" size={48} color="white" />
+            :
+            <FontAwesome5 name="check" size={48} color="white" />
+          }
+        </View>
+      </TouchableOpacity>
 
     </View>
   );
@@ -23,12 +26,8 @@ export default function Footer(props) {
 const styles = StyleSheet.create({
   footer: {
     width: '100%',
-    height: 70,
     position: 'absolute',
     bottom: 0,
-    backgroundColor: '#344955',
-    borderTopWidth: 3,
-    borderTopColor: '#F9AA33',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
@@ -38,12 +37,13 @@ const styles = StyleSheet.create({
     top: -25
   },
   buttonImage: {
-    width: 80,
-    height: 80
+    width: 75,
+    height: 75,
+    borderRadius: 75,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: constants.colors.primary,
+    elevation: 5
   },
-  text: {
-    position: 'relative',
-    top: -22,
-    color: 'white'
-  }
 });

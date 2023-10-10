@@ -3,8 +3,10 @@ import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { StyleSheet } from "react-native";
 import { format } from 'date-fns';
 
+import constants from '../constants';
+
 // icons
-import icons from '../utils/typeicons'
+import TypeIcon from './TypeIcon';
 
 export default function TaskCard(props) {
   const date = useMemo(() => format(new Date(props.when), 'MM-dd-yyyy'), [props.when]);
@@ -13,7 +15,7 @@ export default function TaskCard(props) {
   return (
     <TouchableOpacity style={[styles.card, props.done && styles.cardDone]}>
       <View style={styles.cardLeftSide}>
-        <Image source={icons[props.type]} style={styles.cardIcon} />
+        <TypeIcon type={props.type} size={48} color="white" backgroundColor={constants.colors.primary} />
         <Text style={styles.cardTitle}>{props.title}</Text>
       </View>
       <View style={styles.cardRightSide}>
@@ -54,7 +56,8 @@ const styles = StyleSheet.create({
   cardTitle: {
     marginLeft: 10,
     fontWeight: 'bold',
-    fontSize: 16
+    fontSize: 16,
+    color: constants.colors.dark300
   },
   cardRightSide: {
     display: 'flex',
@@ -62,12 +65,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   cardDate: {
-    color: '#F9AA33',
+    color: constants.colors.primary,
     fontWeight: 'bold',
     fontSize: 16
   },
   cardTime: {
-    color: '#707070'
+    color: constants.colors.dark100
   },
   cardDone: {
     opacity: 0.5

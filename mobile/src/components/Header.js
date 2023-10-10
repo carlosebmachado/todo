@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { StyleSheet } from "react-native";
+import { FontAwesome5 } from '@expo/vector-icons';
 
 import api from '../services/api';
-
-// icons
-import iconLogo from '../assets/logo.png';
-import iconBell from '../assets/bell.png';
-import iconQrcode from '../assets/qrcode.png';
-import iconBack from '../assets/back.png';
+import constants from '../constants';
 
 export default function Header(props) {
   const [lateCount, setLateCount] = useState(0);
@@ -16,10 +12,10 @@ export default function Header(props) {
   // trigger loadTasks based on filterActivated
   useEffect(() => {
     async function lateVerify() {
-      await api.get(`/task/filter/late/11:11:11:11:11:11`)
-        .then(response => {
-          setLateCount(response.data.length);
-        })
+      // await api.get(`/task/filter/late`)
+      //   .then(response => {
+      //     setLateCount(response.data.length);
+      //   })
     }
 
     lateVerify();
@@ -27,17 +23,22 @@ export default function Header(props) {
 
   return (
     <View style={styles.header}>
-      
+
       <TouchableOpacity onPress={props.pressLeft} style={styles.leftIcon}>
-        <Image source={props.isHome ? iconQrcode : iconBack} style={styles.leftIconImage} />
+        {props.isHome ?
+          <FontAwesome5 name="qrcode" size={24} color={constants.colors.primary} />
+          :
+          <FontAwesome5 name="arrow-left" size={24} color={constants.colors.primary} />
+        }
+
       </TouchableOpacity>
 
-      <Image source={iconLogo} style={styles.logo} />
+      <Text style={{ fontSize: 24, fontWeight: 'bold', color: constants.colors.primary }}>ToDo</Text>
 
       {
         props.showNotification &&
         <TouchableOpacity style={styles.notification} onPress={props.pressRight}>
-          <Image source={iconBell} style={styles.notificationImage} />
+          <FontAwesome5 name="bell" size={24} color={constants.colors.primary} />
           {
             lateCount > 0 &&
             <View style={styles.notificationTextBackground}>
@@ -55,12 +56,11 @@ const styles = StyleSheet.create({
   header: {
     width: '100%',
     height: 70,
-    backgroundColor: '#344955',
-    borderBottomWidth: 3,
-    borderBottomColor: '#F9AA33',
+    backgroundColor: 'white',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    elevation: 1
   },
   logo: {
     width: 100,
