@@ -12,6 +12,7 @@ import ErrorMessage, { errorMessageTimeout } from '../components/ErrorMessage';
 
 
 export default function Login() {
+  const [isBusy, setIsBusy] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [redirectHome, setRedirectHome] = useState(false);
   const [username, setUsername] = useState('');
@@ -34,6 +35,8 @@ export default function Login() {
       return;
     }
 
+    setIsBusy(true);
+
     try {
       const response = await api('').post('/auth/login', {
         username,
@@ -53,6 +56,8 @@ export default function Login() {
       }, errorMessageTimeout);
       return;
     }
+
+    setIsBusy(false);
   }
 
   useEffect(() => {

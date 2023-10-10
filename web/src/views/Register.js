@@ -12,6 +12,7 @@ import ErrorMessage, { errorMessageTimeout } from '../components/ErrorMessage';
 
 
 export default function Register() {
+  const [isBusy, setIsBusy] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [redirectHome, setRedirectHome] = useState(false);
   const [name, setFullName] = useState('');
@@ -42,6 +43,8 @@ export default function Register() {
       return;
     }
 
+    setIsBusy(true);
+
     try {
       const response = await api('').post('/auth/register', {
         name,
@@ -54,6 +57,7 @@ export default function Register() {
         name: name,
         token: response.data.token
       });
+      setIsConnected(true);
     } catch (error) {
       setErrorMessage('An error occurred while trying to register.');
       setTimeout(() => {
@@ -62,7 +66,7 @@ export default function Register() {
       return;
     }
 
-    setIsConnected(true);
+    setIsBusy(false);
   }
 
   useEffect(() => {
