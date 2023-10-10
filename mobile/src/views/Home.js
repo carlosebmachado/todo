@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import { StyleSheet } from "react-native";
 
-import api from '../../services/api';
-
-import styles from './styles';
+import api from '../services/api';
 
 // components
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
-import TaskCard from '../../components/TaskCard';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import TaskCard from '../components/TaskCard';
 
 export default function Home(props) {
   const [filter, setFilterActivated] = useState('today');
@@ -80,3 +79,48 @@ export default function Home(props) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'flex-start'
+  },
+  title: {
+    width: '100%',
+    borderBottomWidth: 1,
+    borderColor: '#344955',
+    alignItems: 'center'
+  },
+  titleText: {
+    color: '#344955',
+    fontSize: 18,
+    position: 'relative',
+    top: 11,
+    backgroundColor: 'white',
+    paddingHorizontal: 10
+  },
+  filter: {
+    width: '100%',
+    height: 70,
+    flexDirection: 'row',
+    alignItems:  'center',
+    justifyContent: 'space-around'
+  },
+  filterTextActived: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    color: '#F9AA33'
+  },
+  filterTextInactived: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    color: '#344955',
+    opacity: 0.5
+  },
+  cards: {
+    width: '100%',
+    marginTop: 30
+  }
+});

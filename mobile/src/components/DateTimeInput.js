@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { TouchableOpacity, Image, TextInput } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import styles from './styles';
+import { StyleSheet } from "react-native";
 
 // icons
-import iconCalender from '../../assets/calendar.png';
-import iconClock from '../../assets/clock.png';
+import iconCalender from '../assets/calendar.png';
+import iconClock from '../assets/clock.png';
 
 export default function Task(props) {
   const [value, setValue] = useState(new Date(1598051730000));
@@ -33,3 +33,22 @@ export default function Task(props) {
     </TouchableOpacity>
   );
 }
+
+const styles = StyleSheet.create({
+  input: {
+    fontSize: 18,
+    padding: 10,
+    width: '95%',
+    borderBottomWidth: 1,
+    borderBottomColor: '#F9AA33',
+    marginHorizontal: 10
+  },
+  iconTextInput: {
+    position: 'absolute',
+    left: '90%',
+    top: 15,
+    width: 22,
+    height: 22,
+    resizeMode: 'contain'
+  }
+});
