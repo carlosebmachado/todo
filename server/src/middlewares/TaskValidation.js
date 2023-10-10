@@ -15,16 +15,6 @@ const TaskValidation = async (req, res, next) => {
         return;
     }
 
-    if (!description) {
-        res.status(400).json({ error: 'missing description' });
-        return;
-    }
-
-    if (!when) {
-        res.status(400).json({ error: 'missing date' });
-        return;
-    }
-
     let exists;
 
     if (req.params.id) {
