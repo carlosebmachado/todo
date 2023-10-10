@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export default function api(token) {
   var reqConfig = {
-    baseURL: process.env.ENVIRONMENT === 'production' ? 'https://todo-backend-services.onrender.com' : 'http://localhost:3333',
+    baseURL: process.env.ENVIRONMENT == 'development' ? 'http://localhost:3333' : 'https://todo-backend-services.onrender.com'
   };
 
   if (token) {
