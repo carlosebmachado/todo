@@ -178,7 +178,7 @@ export default function Task(props) {
         <TypeIcons>
           {
             Array.from(Array(9).keys()).map((i) => (
-              i > 1 &&
+              i > 0 &&
               <button key={(i).toString()} onClick={() => setType(i)}>
                 <TypeIconWrapper active={i === type} style={{ padding: 8 }}>
                   <TypeIcon size={25} type={i} />
