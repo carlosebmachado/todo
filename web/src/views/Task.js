@@ -49,15 +49,26 @@ export default function Task(props) {
       return;
     }
 
+    var taskBody = {
+      type,
+      title,
+    };
+
+    if (description) {
+      taskBody.description = description;
+    }
+
+    if (date) {
+      if (hour) {
+        taskBody.when = `${date}T${hour}:00.000`;
+      } else {
+        taskBody.when = `${date}T00:00:00.000`;
+      }
+    }
+
     // if id has setted, update
     if (props.match.params.id) {
-      await api(token).put(`/task/${props.match.params.id}`, {
-        done,
-        type,
-        title,
-        description,
-        when: `${date}T${hour}:00.000`
-      })
+      await api(token).put(`/task/${props.match.params.id}`, taskBody)
         .then(() => {
           setRedirectHome(true);
         })
@@ -69,13 +80,7 @@ export default function Task(props) {
         });
       // else insert
     } else {
-      await api(token).post('/task', {
-        macaddress: isConnected,
-        type,
-        title,
-        description,
-        when: `${date}T${hour}:00.000`
-      })
+      await api(token).post('/task', taskBody)
         .then(() => {
           setRedirectHome(true);
         })
