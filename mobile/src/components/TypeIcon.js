@@ -1,11 +1,13 @@
 import React from 'react';
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native';
 import { View } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 
 
+export const CATEGORY_COUNT = 8;
+
 export default function TypeIcon({ type, color, backgroundColor, size }) {
-  const iconSize = size * 0.6;
+  const iconSize = size * 0.5;
 
   return (
     <View style={[styles.wrapper, { backgroundColor, width: size, height: size, borderRadius: size }]}>

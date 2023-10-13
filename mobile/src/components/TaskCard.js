@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
+import Checkbox from 'expo-checkbox';
 import { format } from 'date-fns';
 
 import constants from '../constants';
@@ -8,46 +9,64 @@ import constants from '../constants';
 // icons
 import TypeIcon from './TypeIcon';
 
+
 export default function TaskCard(props) {
+  const [isChecked, setChecked] = React.useState(false);
   const date = useMemo(() => format(new Date(props.when), 'MM-dd-yyyy'), [props.when]);
   const hour = useMemo(() => format(new Date(props.when), 'HH:mm'), [props.when]);
 
   return (
-    <TouchableOpacity style={[styles.card, props.done && styles.cardDone]}>
-      <View style={styles.cardLeftSide}>
-        <TypeIcon type={props.type} size={48} color="white" backgroundColor={constants.colors.primary} />
+    <View style={[styles.card, props.last && { borderBottomWidth: 0 }]}>
+      <Checkbox
+        style={styles.checkbox}
+        value={isChecked}
+        onValueChange={setChecked}
+        color={isChecked ? constants.colors.primary : undefined}
+      />
+      <TouchableOpacity style={styles.cardTouch}>
         <Text style={styles.cardTitle}>{props.title}</Text>
-      </View>
-      <View style={styles.cardRightSide}>
-        <Text style={styles.cardDate}>{date}</Text>
-        <Text style={styles.cardTime}>{hour}</Text>
-      </View>
-    </TouchableOpacity>
+        <View style={styles.cardRightSide}>
+          <View style={styles.timeWrapper}>
+            <Text style={styles.cardDate}>{date}</Text>
+            <Text style={styles.cardTime}>{hour}</Text>
+          </View>
+          <TypeIcon type={props.type} size={34} color="white" backgroundColor={constants.colors.primary} />
+        </View>
+      </TouchableOpacity>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    width: '95%',
-    height: 70,
-    padding: 10,
-    marginVertical: 10,
-    justifyContent: 'space-between',
+    flex: 1,
+    width: '100%',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
     flexDirection: 'row',
-    backgroundColor: 'white',
-    shadowColor: 'black',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    borderRadius: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: constants.colors.light100
   },
-  cardLeftSide: {
+  checkbox: {
+    alignSelf: 'center',
+    height: 24,
+    width: 24
+  },
+  cardTouch: {
+    display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flex: 1,
+    width: '100%'
+  },
+  cardRightSide: {
+    display: 'flex',
+    flex: 1,
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end'
   },
   cardIcon: {
     width: 40,
@@ -59,10 +78,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: constants.colors.dark300
   },
-  cardRightSide: {
+  timeWrapper: {
     display: 'flex',
     alignItems: 'flex-end',
-    justifyContent: 'space-between'
+    justifyContent: 'flex-end',
+    marginRight: 10
   },
   cardDate: {
     color: constants.colors.primary,

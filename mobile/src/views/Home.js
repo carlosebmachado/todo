@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { StyleSheet } from 'react-native';
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
-import { StyleSheet } from "react-native";
 
 import api from '../services/api';
 import constants from '../constants';
@@ -9,6 +9,7 @@ import constants from '../constants';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import TaskCard from '../components/TaskCard';
+
 
 export default function Home(props) {
   const [filter, setFilterActivated] = useState('today');
@@ -24,17 +25,17 @@ export default function Home(props) {
   }
 
   async function loadTasks() {
-    // setLoad(true);
-    // await api.get(`/task/filter/${filter}`)
-    //   .then(response => {
-    //     setTasks(response.data);
-    //   })
-    //   .catch(error => {
+    setLoad(true);
+    await api('').get(`/task/filter/${filter}`)
+      .then(response => {
+        setTasks(response.data);
+      })
+      .catch(error => {
 
-    //   })
-    //   .finally(() => {
-    //     setLoad(false);
-    //   });
+      })
+      .finally(() => {
+        setLoad(false);
+      });
   }
 
   useEffect(() => {
@@ -43,7 +44,7 @@ export default function Home(props) {
 
   return (
     <View style={styles.container}>
-      <Header isHome={true} showNotification={true} pressRight={notification} />
+      <Header isHome={true} showLeftIcon={true} showRightIcon={true} pressRight={notification} />
 
       <View style={styles.filter}>
         <TouchableOpacity onPress={() => setFilterActivated('all')}>
@@ -63,30 +64,33 @@ export default function Home(props) {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.title}>
-        <Text style={styles.titleText}>{filter === 'late' && 'OVERDUE '}TASKS</Text>
-      </View>
-
-      <ScrollView style={styles.cards} contentContainerStyle={{ alignItems: 'center' }}>
-        {
-          load ?
-            <ActivityIndicator color={constants.colors.primary} size={50} />
-            :
+      {load ?
+        <ActivityIndicator color={constants.colors.primary} size={50} />
+        :
+        <ScrollView style={styles.cards} contentContainerStyle={{ alignItems: 'center' }}>
+          <View style={styles.cardWrapper}>
             <>
               {tasks.map((t, i) => (
-                <TaskCard key={i} id={t._id} title={t.title} when={t.when} done={t.done} type={t.type} />
+                <TaskCard key={i} id={t._id} title={t.title} when={t.when} done={t.done} type={t.type} last={i === tasks.length() - 1} />
               ))}
               <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={1} />
-              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={2} />
+              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={true} type={2} />
               <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={3} />
               <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={4} />
               <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={5} />
               <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={6} />
               <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={7} />
-              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={8} />
+              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={true} type={2} />
+              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={7} />
+              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={true} type={2} />
+              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={7} />
+              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={true} type={2} />
+              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={7} />
+              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={8} last={true} />
             </>
-        }
-      </ScrollView>
+          </View>
+        </ScrollView>
+      }
 
       <Footer icon={'add'} onPress={navigateTask}></Footer>
     </View>
@@ -98,7 +102,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     alignItems: 'center',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
+    backgroundColor: constants.colors.light100
+  },
+  cardWrapper: {
+    flexWrap: 'wrap',
+    width: '95%',
+    borderRadius: 15,
+    margin: 5,
+    marginHorizontal: 10,
+    marginBottom: 120,
+    elevation: 5,
+    backgroundColor: 'white'
   },
   title: {
     width: '100%',
@@ -129,12 +144,11 @@ const styles = StyleSheet.create({
   filterTextInactived: {
     fontWeight: 'bold',
     fontSize: 18,
-    color: constants.colors.dark500,
-    opacity: 0.5
+    color: constants.colors.dark100,
   },
   cards: {
     flex: 1,
     width: '100%',
-    marginTop: 30
+    padding: 10
   }
 });

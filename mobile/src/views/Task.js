@@ -5,21 +5,19 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  Image,
   KeyboardAvoidingView,
   Switch
 } from 'react-native';
 import { StyleSheet } from "react-native";
 
-// icons
-import icons from '../utils/typeicons'
-
 import api from '../services/api';
+import constants from '../constants';
 
 // components
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import DateTimeInput from '../components/DateTimeInput';
+import TypeIcon, { CATEGORY_COUNT } from '../components/TypeIcon';
 
 export default function Task(props) {
   const [done, setDone] = useState(false);
@@ -31,16 +29,16 @@ export default function Task(props) {
   return (
     <KeyboardAvoidingView behavior="margin" style={styles.container}>
 
-      <Header pressLeft={navigateHome} />
+      <Header showLeftIcon={true} pressLeft={navigateHome} />
 
       <ScrollView style={{width: '100%'}}>
 
         <ScrollView style={{marginVertical: 10}} horizontal={true} showsHorizontalScrollIndicator={false}>
           {
-            icons.map((icon, i) => (
-              icon &&
-              <TouchableOpacity key={i}>
-                <Image source={icon} style={styles.imageIcon}/>
+            new Array(CATEGORY_COUNT).fill(0).map((_, i) => (
+              i > 0 &&
+              <TouchableOpacity style={styles.categoryView} key={i}>
+                <TypeIcon type={i} size={48} color="white" backgroundColor={constants.colors.primary} />
               </TouchableOpacity>
             ))
           }
@@ -57,7 +55,7 @@ export default function Task(props) {
 
         <View style={styles.inline}>
           <View style={styles.inputInline}>
-            <Switch onValueChange={() => setDone(!done)} value={done} thumbColor={done ? '#F9AA33' : '#f0f0f0'} />
+            <Switch onValueChange={() => setDone(!done)} value={done} thumbColor={done ? constants.colors.primary : '#f0f0f0'} />
             <Text style={styles.switchLabel}>DONE</Text>
           </View>
           <TouchableOpacity>
@@ -80,6 +78,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start'
   },
+  categoryView: {
+    paddingHorizontal: 8,
+    paddingVertical: 10
+  },
   imageIcon: {
     width: 40,
     height: 40,
@@ -97,7 +99,7 @@ const styles = StyleSheet.create({
     padding: 10,
     width: '95%',
     borderBottomWidth: 1,
-    borderBottomColor: '#F9AA33',
+    borderBottomColor: constants.colors.primary,
     marginHorizontal: 10
   },
   inputarea: {
@@ -105,7 +107,7 @@ const styles = StyleSheet.create({
     padding: 10,
     width: '95%',
     borderWidth: 1,
-    borderColor: '#F9AA33',
+    borderColor: constants.colors.primary,
     borderRadius: 10,
     marginHorizontal: 10,
     height: 100,
@@ -126,7 +128,7 @@ const styles = StyleSheet.create({
   },
   switchLabel: {
     fontWeight: 'bold',
-    color: '#F9AA33',
+    color: constants.colors.primary,
     textTransform: 'uppercase',
     fontSize: 16,
     paddingLeft: 10
