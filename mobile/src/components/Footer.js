@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   },
   button: {
     position: 'relative',
-    top: -25
+    top: -20
   },
   buttonImage: {
     width: 75,

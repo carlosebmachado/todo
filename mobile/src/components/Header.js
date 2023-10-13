@@ -24,19 +24,22 @@ export default function Header(props) {
   return (
     <View style={styles.header}>
 
-      <TouchableOpacity onPress={props.pressLeft} style={styles.leftIcon}>
-        {props.isHome ?
-          <FontAwesome5 name="qrcode" size={24} color={constants.colors.primary} />
-          :
-          <FontAwesome5 name="arrow-left" size={24} color={constants.colors.primary} />
-        }
+      {
+        props.showLeftIcon &&
+        <TouchableOpacity onPress={props.pressLeft} style={styles.leftIcon}>
+          {props.isHome ?
+            <FontAwesome5 style={{ transform: [{ rotate: '180deg' }] }} name="sign-out-alt" size={24} color={constants.colors.primary} />
+            :
+            <FontAwesome5 name="arrow-left" size={24} color={constants.colors.primary} />
+          }
 
-      </TouchableOpacity>
+        </TouchableOpacity>
+      }
 
       <Text style={{ fontSize: 24, fontWeight: 'bold', color: constants.colors.primary }}>ToDo</Text>
 
       {
-        props.showNotification &&
+        props.showRightIcon &&
         <TouchableOpacity style={styles.notification} onPress={props.pressRight}>
           <FontAwesome5 name="bell" size={24} color={constants.colors.primary} />
           {
