@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { TouchableOpacity, Image, TextInput } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { TouchableOpacity, TextInput } from 'react-native';
+import { FontAwesome5 } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { StyleSheet } from "react-native";
 
-// icons
-import iconCalender from '../assets/calendar.png';
-import iconClock from '../assets/clock.png';
+import constants from '../constants';
 
 export default function Task(props) {
   const [value, setValue] = useState(new Date(1598051730000));
@@ -20,7 +19,11 @@ export default function Task(props) {
   return (
     <TouchableOpacity onPress={() => setShow(true)}>
       <TextInput style={styles.input} editable={false} value={props.mode === 'date' ? value.toLocaleDateString() : value.toLocaleTimeString()} />
-      <Image style={styles.iconTextInput} source={props.mode === 'date' ? iconCalender : iconClock} />
+      {props.mode === 'date' ?
+        <FontAwesome5 style={styles.iconTextInput} name="calendar-alt" size={21} color={constants.colors.primary} />
+        :
+        <FontAwesome5 style={styles.iconTextInput} name="clock" size={21} color={constants.colors.primary} />
+      }
       {
         show &&
         <DateTimePicker
@@ -40,7 +43,7 @@ const styles = StyleSheet.create({
     padding: 10,
     width: '95%',
     borderBottomWidth: 1,
-    borderBottomColor: '#F9AA33',
+    borderBottomColor: constants.colors.primary,
     marginHorizontal: 10
   },
   iconTextInput: {
