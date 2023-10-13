@@ -1,55 +1,56 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, ActivityIndicator, StyleSheet, TextInput } from 'react-native';
+import { View, Text, Button, ActivityIndicator, StyleSheet, TextInput, TouchableOpacity, ToastAndroid } from 'react-native';
 
-// import api from '../services/api';
+import api from '../services/api';
 import constants from '../constants';
-// import SessionStore from '../services/SessionStore';
+import SessionStore from '../services/SessionStore';
 import Header from '../components/Header';
 
 
-export default function Login() {
+export default function Login(props) {
   const [isBusy, setIsBusy] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [redirectHome, setRedirectHome] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isConnected, setIsConnected] = useState(false);
 
   async function onSigninClick() {
     if (!username) {
-      // setErrorMessage('You need to enter your username.');
-      setTimeout(() => {
-        setErrorMessage('');
-      }, errorMessageTimeout);
+      ToastAndroid.showWithGravity(
+        'You need to enter your username.',
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER,
+      );
       return;
     }
     if (!password) {
-      // setErrorMessage('You need to enter your password.');
-      setTimeout(() => {
-        setErrorMessage('');
-      }, errorMessageTimeout);
+      ToastAndroid.showWithGravity(
+        'You need to enter your password.',
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER,
+      );
       return;
     }
 
     setIsBusy(true);
 
     try {
-      // const response = await api('').post('/auth/login', {
-      //   username,
-      //   password
-      // });
-      // await SessionStore.signin({
-      //   userId: response.data.userId,
-      //   username: username,
-      //   name: response.data.name,
-      //   token: response.data.token
-      // });
+      const response = await api('').post('/auth/login', {
+        username,
+        password
+      });
+      await SessionStore.signin({
+        userId: response.data.userId,
+        username: username,
+        name: response.data.name,
+        token: response.data.token
+      });
       setIsConnected(true);
     } catch (error) {
-      // setErrorMessage('Wrong username or password.');
-      setTimeout(() => {
-        setErrorMessage('');
-      }, errorMessageTimeout);
+      ToastAndroid.showWithGravity(
+        'Wrong username or password.',
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER,
+      );
       return;
     }
 
@@ -57,18 +58,18 @@ export default function Login() {
   }
 
   useEffect(() => {
-    // if (isConnected) {
-    //   setRedirectHome(true);
-    // }
+    if (isConnected) {
+      props.navigation.navigate('Home');
+    }
 
-    // if (!isConnected) {
-    //   SessionStore.getData()
-    //     .then(response => {
-    //       if (response.token) {
-    //         setRedirectHome(true);
-    //       }
-    //     });
-    // }
+    if (!isConnected) {
+      SessionStore.getData()
+        .then(response => {
+          if (response.token) {
+            props.navigation.navigate('Home');
+          }
+        });
+    }
 
   }, [isConnected]);
 
@@ -76,16 +77,14 @@ export default function Login() {
     <>
       <Header />
       <View style={styles.container}>
-        { isBusy && <ActivityIndicator color={constants.colors.primary} size={50} />}
-        <View style={styles.content}>
-          <Text style={[styles.title, styles.alignSelfCenter]}>LOGIN</Text>
-          <View>
-            <TextInput style={styles.input} maxLength={30} placeholder={'username...'} />
-            <TextInput style={[styles.input, {marginBottom:40}]} maxLength={30} placeholder={'password...'} />
-              <Button title="Sign in" onPress={onSigninClick} color={constants.colors.primary} />
-            <Text style={[styles.alignSelfCenter, {marginTop:50}]}>Don't have an account?</Text>
-          </View>
-        </View>
+        {isBusy && <ActivityIndicator color={constants.colors.primary} size={50} />}
+        <Text style={styles.title}>LOGIN</Text>
+        <TextInput value={username} onChangeText={setUsername} placeholder={'username...'} style={styles.input} />
+        <TextInput value={password} onChangeText={setPassword} placeholder={'password...'} style={[styles.input, { marginBottom: 40 }]} />
+        <Button title="Sign in" onPress={onSigninClick} color={constants.colors.primary} />
+        <TouchableOpacity style={styles.createAccount} onPress={() => props.navigation.navigate('Register')}>
+          <Text style={styles.createAccount}>Don't have an account?</Text>
+        </TouchableOpacity>
       </View>
     </>
   );
@@ -93,19 +92,22 @@ export default function Login() {
 
 const styles = StyleSheet.create({
   container: {
+    display: 'flex',
     flex: 1,
+    width: '100%',
+    height: '100%',
     backgroundColor: 'white',
     justifyContent: 'flex-start',
     marginTop: 50,
     padding: 20
   },
-  content: {
-    display: 'flex',
-    flexDirection: 'column'
-  },
-
-  alignSelfCenter: {
-    alignSelf: 'center'
+  createAccount: {
+    color: constants.colors.primary,
+    position: 'absolute',
+    bottom: 30,
+    alignSelf: 'center',
+    fontWeight: 'bold',
+    fontSize: 16
   },
   title: {
     color: constants.colors.primary,
@@ -130,79 +132,3 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
 });
-
-
-// export const Container = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-// `;
-
-// export const Content = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-
-//   h1 {
-//     margin-top: 20%;
-//     margin-bottom: 30px;
-//     color: ${constants.colors.primary};
-//     font-weight: lighter;
-//     font-size: 1.8rem;
-//   }
-// `;
-
-// export const UserDataWrapper = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-
-//   small {
-//     text-transform: uppercase;
-//     font-weight: bold;
-//     color: ${constants.colors.primary};
-//   }
-
-//   input {
-//     margin-top: 10px;
-//     font-size: 1.2rem;
-//     padding: 10px;
-//     border: none;
-//     color: #414141;
-//     border-bottom: 1px solid ${constants.colors.primary};
-//     border-radius: 8px;
-    
-//     &:focus {
-//       outline: none;
-//       border-bottom: 2px solid ${constants.colors.primary};
-//     }
-
-//     &:last-of-type {
-//       margin-bottom: 20px;
-//     }
-//   }
-
-//   a {
-//     color: ${constants.colors.primary};
-//     text-decoration: none;
-//     margin-top: 20px;
-//   }
-
-//   button {
-//     font-weight: bold;
-//     background-color: ${constants.colors.primary};
-//     color: white;
-//     font-size: 1.2rem;
-//     padding: 10px;
-//     border-radius: 30px;
-//     cursor: pointer;
-//     margin-top: 10px;
-//     border: none;
-//     width: 100%;
-//     text-transform: uppercase;
-
-//     &:hover {
-//       background-color: ${constants.colors.secondary};
-//     }
-//   }
-// `;
