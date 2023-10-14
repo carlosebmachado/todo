@@ -31,8 +31,6 @@ export default function Task(props) {
 
   // save task
   async function handleSave() {
-    setIsBusy(true);
-
     // data validation
     if (!type) {
       setErrorMessage('The Task type is missing.');
@@ -48,6 +46,8 @@ export default function Task(props) {
       }, errorMessageTimeout);
       return;
     }
+
+    setIsBusy(true);
 
     var taskBody = {
       type,
