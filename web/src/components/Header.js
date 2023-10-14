@@ -160,7 +160,7 @@ export const RightSide = styled.div`
       top: -12px;
       right: 8px;
       background-color: white;
-      color: ${constants.colors.secondary};
+      color: ${constants.colors.accent};
       font-size: 0.8rem;
       padding: 0 1px;
       border-radius: 50%;
