@@ -8,13 +8,23 @@ import Header from '../components/Header';
 
 
 export default function Login(props) {
+  const refUserameTextInput = useRef(null);
   const refPasswordTextInput = useRef(null);
   const [isBusy, setIsBusy] = useState(false);
+  const [displayName, setDisplayName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isConnected, setIsConnected] = useState(false);
 
   async function onSigninClick() {
+    if (!displayName) {
+      ToastAndroid.showWithGravity(
+        'You need to enter a display name.',
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER,
+      );
+      return;
+    }
     if (!username) {
       ToastAndroid.showWithGravity(
         'You need to enter your username.',
@@ -35,20 +45,21 @@ export default function Login(props) {
     setIsBusy(true);
 
     try {
-      const response = await api('').post('/auth/login', {
+      const response = await api('').post('/auth/register', {
+        name: displayName,
         username,
         password
       });
       await SessionStore.signin({
         userId: response.data.userId,
         username: username,
-        name: response.data.name,
+        name: displayName,
         token: response.data.token
       });
       setIsConnected(true);
     } catch (error) {
       ToastAndroid.showWithGravity(
-        'Wrong username or password.',
+        'An error occurred while trying to register.',
         ToastAndroid.SHORT,
         ToastAndroid.CENTER,
       );
@@ -62,16 +73,6 @@ export default function Login(props) {
     if (isConnected) {
       props.navigation.navigate('Home');
     }
-
-    if (!isConnected) {
-      SessionStore.getData()
-        .then(response => {
-          if (response.token) {
-            props.navigation.navigate('Home');
-          }
-        });
-    }
-
   }, [isConnected]);
 
   return (
@@ -83,13 +84,18 @@ export default function Login(props) {
       <KeyboardAvoidingView behavior="margin" style={styles.view}>
         <Header />
         <View style={styles.container}>
-          <Text style={styles.title}>LOGIN</Text>
-          <TextInput value={username} onChangeText={setUsername} placeholder={'username...'} style={styles.input} onSubmitEditing={() => refPasswordTextInput.current.focus()} autoFocus={true} blurOnSubmit={false} />
+          {isBusy && <ActivityIndicator color={constants.colors.primary} size={50} />}
+          <Text style={styles.title}>REGISTER</Text>
+          <Text style={styles.label}>Display name</Text>
+          <TextInput value={displayName} onChangeText={setDisplayName} placeholder={'display name...'} style={styles.input} onSubmitEditing={() => refUserameTextInput.current.focus()} autoFocus={true} blurOnSubmit={false} />
+          <Text style={styles.label}>Username</Text>
+          <TextInput value={username} onChangeText={setUsername} placeholder={'username...'} style={styles.input} onSubmitEditing={() => refPasswordTextInput.current.focus()} ref={refUserameTextInput} blurOnSubmit={false} />
+          <Text style={styles.label}>Password</Text>
           <TextInput value={password} onChangeText={setPassword} placeholder={'password...'} style={[styles.input, { marginBottom: 40 }]} secureTextEntry={true} ref={refPasswordTextInput} />
-          <Button title="Sign in" onPress={onSigninClick} color={constants.colors.primary} />
-          <View style={styles.createAccountView}>
-            <TouchableOpacity onPress={() => props.navigation.navigate('Register')}>
-              <Text style={styles.createAccountText}>Dont have an account?</Text>
+          <Button title="Register" onPress={onSigninClick} color={constants.colors.primary} />
+          <View style={styles.signinView}>
+            <TouchableOpacity onPress={() => props.navigation.navigate('Login')}>
+              <Text style={styles.signinText}>Already have an account?</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -112,17 +118,18 @@ const styles = StyleSheet.create({
     display: 'flex',
     flex: 1,
     width: '100%',
+    height: '100%',
     backgroundColor: 'white',
     justifyContent: 'flex-start',
     marginTop: 50,
     padding: 20
   },
-  createAccountView: {
+  signinView: {
     justifyContent: 'flex-end',
     alignItems: 'center',
     flex: 1
   },
-  createAccountText: {
+  signinText: {
     color: constants.colors.primary,
     fontWeight: 'bold',
     fontSize: 16,
@@ -132,6 +139,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
     marginBottom: 20
+  },
+  label: {
+    color: '#707070',
+    fontSize: 18,
+    paddingHorizontal: 10,
+    marginTop: 20,
+    marginBottom: 5
   },
   input: {
     fontSize: 18,

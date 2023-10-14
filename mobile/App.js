@@ -3,15 +3,16 @@ import { StatusBar } from 'react-native';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 
 import Login from './src/views/Login';
+import Register from './src/views/Register';
 import Home from './src/views/Home';
 import Task from './src/views/Task';
 
 const Routes = createAppContainer(
   createSwitchNavigator({
-    Login
-    // ,
-    // Home,
-    // Task
+    Login,
+    Register,
+    Home,
+    Task
   })
 )
 
