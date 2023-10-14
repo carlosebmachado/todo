@@ -6,19 +6,20 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 import constants from '../constants';
 
-export default function Task(props) {
-  const [value, setValue] = useState(new Date(1598051730000));
+export default function DateTimeInput(props) {
+  const [value, setValue] = useState(props.value || new Date());
   const [show, setShow] = useState(false);
 
   const onChange = (e, selectedValue) => {
     const currentValue = selectedValue || value;
     setShow(false);
     setValue(currentValue);
+    props.onValueChange(currentValue);
   };
 
   return (
     <TouchableOpacity onPress={() => setShow(true)}>
-      <TextInput style={styles.input} editable={false} value={props.mode === 'date' ? value.toLocaleDateString() : value.toLocaleTimeString()} />
+      <TextInput {...props} style={styles.input} editable={false} value={props.mode === 'date' ? value.toLocaleDateString() : value.toLocaleTimeString()} />
       {props.mode === 'date' ?
         <FontAwesome5 style={styles.iconTextInput} name="calendar-alt" size={21} color={constants.colors.primary} />
         :

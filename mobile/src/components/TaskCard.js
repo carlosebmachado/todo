@@ -1,29 +1,69 @@
-import React, { useMemo } from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useEffect, useState, useMemo } from 'react';
+import { StyleSheet, ToastAndroid } from 'react-native';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import { format } from 'date-fns';
 
 import constants from '../constants';
+import api from '../services/api';
+import SessionStore from '../services/SessionStore';
 
 // icons
 import TypeIcon from './TypeIcon';
 
 
 export default function TaskCard(props) {
-  const [isChecked, setChecked] = React.useState(false);
+  const [taskDone, setTaskDone] = useState(props.done);
   const date = useMemo(() => format(new Date(props.when), 'MM-dd-yyyy'), [props.when]);
   const hour = useMemo(() => format(new Date(props.when), 'HH:mm'), [props.when]);
+  const [isConnected, setIsConnected] = useState(false);
+  const [token, setToken] = useState('');
+
+  async function handleDone(_) {
+    if (!props.id) {
+      return;
+    }
+    if (!isConnected || !token) {
+      return;
+    }
+    var curDone = !taskDone;
+    setTaskDone(!curDone);
+    await api(token).patch(`/task/${props.id}/${curDone}`)
+      .then((response) => {
+        setTaskDone(response.data.done);
+      })
+      .catch(_ => {
+        ToastAndroid.showWithGravity(
+          'Error updating task',
+          ToastAndroid.SHORT,
+          ToastAndroid.CENTER,
+        );
+      });
+  }
+
+  useEffect(() => {
+    if (!isConnected) {
+      SessionStore.getData()
+        .then(response => {
+          if (!response.token) {
+            return;
+          }
+          setIsConnected(true);
+          setToken(response.token);
+        });
+    }
+
+  }, [isConnected]);
 
   return (
     <View style={[styles.card, props.last && { borderBottomWidth: 0 }]}>
       <Checkbox
         style={styles.checkbox}
-        value={isChecked}
-        onValueChange={setChecked}
-        color={isChecked ? constants.colors.primary : undefined}
+        value={taskDone}
+        onValueChange={handleDone}
+        color={taskDone ? constants.colors.primary : undefined}
       />
-      <TouchableOpacity style={styles.cardTouch}>
+      <TouchableOpacity style={styles.cardTouch} onPress={props.onPress}>
         <Text style={styles.cardTitle}>{props.title}</Text>
         <View style={styles.cardRightSide}>
           <View style={styles.timeWrapper}>
