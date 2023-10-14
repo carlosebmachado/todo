@@ -5,21 +5,41 @@ import { FontAwesome5 } from '@expo/vector-icons';
 
 import api from '../services/api';
 import constants from '../constants';
+import SessionStore from '../services/SessionStore';
+
 
 export default function Header(props) {
   const [lateCount, setLateCount] = useState(0);
+  const [isConnected, setIsConnected] = useState(false);
+  const [token, setToken] = useState('');
 
   // trigger loadTasks based on filterActivated
   useEffect(() => {
     async function lateVerify() {
-      // await api.get(`/task/filter/late`)
-      //   .then(response => {
-      //     setLateCount(response.data.length);
-      //   })
+      await api(token).get(`/task/filter/late`)
+      .then(response => {
+        setLateCount(response.data.length);
+      })
+      .catch(error => {
+        console.log(error);
+      });
     }
 
-    lateVerify();
-  }, []);
+    if (!isConnected) {
+      SessionStore.getData()
+        .then(response => {
+          if (!response.token) {
+            return;
+          }
+          setIsConnected(true);
+          setToken(response.token);
+        });
+    }
+
+    if (isConnected && token) {
+      lateVerify();
+    }
+  }, [isConnected, token]);
 
   return (
     <View style={styles.header}>
@@ -78,18 +98,19 @@ const styles = StyleSheet.create({
     height: 30
   },
   notificationTextBackground: {
-    width: 20,
-    height: 20,
-    backgroundColor: 'white',
-    borderRadius: 10,
+    width: 17,
+    height: 17,
+    backgroundColor: constants.colors.danger,
+    borderRadius: 17,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
-    left: 13,
-    bottom: 13
+    left: 10,
+    bottom: 10
   },
   notificationText: {
-    color: '#F9AA33',
+    fontSize: 12,
+    color: 'white',
     fontWeight: 'bold'
   },
   leftIcon: {

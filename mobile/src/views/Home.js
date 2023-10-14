@@ -1,23 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
+import { Image, StyleSheet } from 'react-native';
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 
 import api from '../services/api';
 import constants from '../constants';
+import SessionStore from '../services/SessionStore';
 
 // components
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import TaskCard from '../components/TaskCard';
 
+import EmptyImage from '../assets/undraw_empty_re_opql.svg';
+
 
 export default function Home(props) {
   const [filter, setFilterActivated] = useState('today');
   const [tasks, setTasks] = useState([]);
   const [load, setLoad] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
+  const [token, setToken] = useState('');
+  const [firstLoad, setFirstLoad] = useState(true);
 
   function notification() {
     setFilterActivated('late');
+  }
+
+  function logout() {
+    SessionStore.signout();
+    props.navigation.navigate('Login');
   }
 
   function navigateTask() {
@@ -26,8 +37,13 @@ export default function Home(props) {
 
   async function loadTasks() {
     setLoad(true);
-    await api('').get(`/task/filter/${filter}`)
+    await api(token).get(`/task/filter/${filter}`)
       .then(response => {
+        if (response.data.length === 0 && filter !== 'all' && firstLoad) {
+          setFilterActivated('all');
+          setFirstLoad(false);
+          return;
+        }
         setTasks(response.data);
       })
       .catch(error => {
@@ -39,12 +55,26 @@ export default function Home(props) {
   }
 
   useEffect(() => {
-    loadTasks();
-  }, [filter]);
+    if (!isConnected) {
+      SessionStore.getData()
+        .then(response => {
+          if (!response.token) {
+            setRedirectSync(true);
+            return;
+          }
+          setIsConnected(true);
+          setToken(response.token);
+        });
+    }
+
+    if (isConnected && token) {
+      loadTasks();
+    }
+  }, [filter, isConnected, token]);
 
   return (
     <View style={styles.container}>
-      <Header isHome={true} showLeftIcon={true} showRightIcon={true} pressRight={notification} />
+      <Header isHome={true} showLeftIcon={true} showRightIcon={true} pressLeft={logout} pressRight={notification} />
 
       <View style={styles.filter}>
         <TouchableOpacity onPress={() => setFilterActivated('all')}>
@@ -69,25 +99,17 @@ export default function Home(props) {
         :
         <ScrollView style={styles.cards} contentContainerStyle={{ alignItems: 'center' }}>
           <View style={styles.cardWrapper}>
-            <>
-              {tasks.map((t, i) => (
-                <TaskCard key={i} id={t._id} title={t.title} when={t.when} done={t.done} type={t.type} last={i === tasks.length() - 1} />
-              ))}
-              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={1} />
-              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={true} type={2} />
-              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={3} />
-              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={4} />
-              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={5} />
-              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={6} />
-              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={7} />
-              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={true} type={2} />
-              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={7} />
-              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={true} type={2} />
-              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={7} />
-              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={true} type={2} />
-              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={7} />
-              <TaskCard id="1" title="Teste 1" when="2023-10-10" done={false} type={8} last={true} />
-            </>
+            {
+              tasks.length !== 0 ?
+                tasks.map((t, i) =>
+                  <TaskCard key={i} id={t._id} title={t.title} when={t.when} done={t.done} type={t.type} last={i === tasks.length - 1} onPress={() => props.navigation.navigate('Task', { id: t._id })} />
+                )
+                :
+                <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center', padding: 30 }}>
+                  <Text style={{ marginBottom: 20 }}>No tasks found :(</Text>
+                  <EmptyImage width={200} height={100} />
+                </View>
+            }
           </View>
         </ScrollView>
       }
