@@ -63,26 +63,26 @@ export default function Home() {
   }, [filterActivated, token, isConnected, isLoading]);
 
   return (
-    isLoading ?
-      <Loading />
-      :
-      <Container>
-        <Loading show={isBusy} opacity={.75} />
+    <Container>
+      {/* <Loading show={isBusy} opacity={.75} /> */}
 
-        {redirectSync && <Redirect to="/login" />}
+      {redirectSync && <Redirect to="/login" />}
 
-        <Header clickNotification={notification} />
+      <Header clickNotification={notification} />
 
-        <FilterWrapper>
-          <FilterCard title="All" actived={filterActivated === 'all'} onClick={() => setFilter('all')} />
-          <FilterCard title="Today" actived={filterActivated === 'today'} onClick={() => setFilter('today')} />
-          <FilterCard title="Week" actived={filterActivated === 'week'} onClick={() => setFilter('week')} />
-          <FilterCard title="Month" actived={filterActivated === 'month'} onClick={() => setFilter('month')} />
-          <FilterCard title="Year" actived={filterActivated === 'year'} onClick={() => setFilter('year')} />
-        </FilterWrapper>
+      <FilterWrapper>
+        <FilterCard title="All" actived={filterActivated === 'all'} onClick={() => setFilter('all')} />
+        <FilterCard title="Today" actived={filterActivated === 'today'} onClick={() => setFilter('today')} />
+        <FilterCard title="Week" actived={filterActivated === 'week'} onClick={() => setFilter('week')} />
+        <FilterCard title="Month" actived={filterActivated === 'month'} onClick={() => setFilter('month')} />
+        <FilterCard title="Year" actived={filterActivated === 'year'} onClick={() => setFilter('year')} />
+      </FilterWrapper>
 
-        <CardWrapper>
-          {tasks.length !== 0 ?
+      <CardWrapper>
+        {isLoading || isBusy ?
+          <Loading size={24} fullScreen={false} />
+          :
+          tasks.length !== 0 ?
             tasks.map((t, i) => (
               <TaskCard key={i.toString()} id={t._id} type={t.type} title={t.title} when={t.when} done={t.done} />
             ))
@@ -91,10 +91,10 @@ export default function Home() {
               <h1>No tasks found :(</h1>
               <img width={250} src={emptyImage} alt="No tasks found" />
             </NoTasksWrapper>
-          }
-        </CardWrapper>
+        }
+      </CardWrapper>
 
-      </Container>
+    </Container>
   );
 }
 
@@ -112,6 +112,7 @@ const FilterWrapper = styled(ContentWrapperBase)`
   margin-top: 15px;
   margin-bottom: 5px;
   justify-content: space-around;
+  background-color: aliceblue;
 `;
 
 const CardWrapper = styled(ContentWrapperBase)`

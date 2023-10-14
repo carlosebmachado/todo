@@ -1,15 +1,22 @@
 import styled, { keyframes } from 'styled-components'
 import constants from '../constants';
 
-export default function Loading({ show = true, size = 32, opacity = 1 }) {
+export default function Loading({ show = true, size = 32, opacity = 1, fullScreen = true, ...props }) {
 
   return (
     show ?
-      <Container opacity={opacity}>
-        <Spinner size={size}>
-          <div></div>
-        </Spinner>
-      </Container>
+      fullScreen ?
+        <FsContainer opacity={opacity}>
+          <Spinner size={size}>
+            <div></div>
+          </Spinner>
+        </FsContainer>
+        :
+        <NmContainer size={size}>
+          <Spinner size={size}>
+            <div></div>
+          </Spinner>
+        </NmContainer>
       :
       <></>
   );
@@ -22,12 +29,24 @@ const rotate = keyframes`
   100% { transform: translate(-50%,-50%) rotate(360deg); }
 `;
 
-const Container = styled.div`
+const FsContainer = styled.div`
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: rgba(255, 255, 255, ${props => props.opacity});
+  z-index: 999;
+`;
+
+const NmContainer = styled.div`
+  position: relative;
+  width: 100%;
+  min-height: ${props => props.size * 2.5}px;
   display: flex;
   align-items: center;
   justify-content: center;
