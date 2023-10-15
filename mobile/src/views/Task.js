@@ -126,6 +126,18 @@ export default function Task(props) {
     }
   }
 
+  async function whenOnChange(_) {
+    var newWhen = !when;
+    setWhen(newWhen);
+    if (newWhen) {
+      setDate(new Date());
+      setHour(new Date());
+    } else {
+      setDate('');
+      setHour('');
+    }
+  }
+
   useEffect(() => {
     async function loadTask() {
       if (!taskId) {
@@ -147,8 +159,11 @@ export default function Task(props) {
           setTitle(response.data.title);
           setDone(response.data.done);
           setDescription(response.data.description);
-          setDate(format(new Date(response.data.when), 'yyyy-MM-dd'));
-          setHour(format(new Date(response.data.when), 'HH:mm'));
+          if (response.data.when) {
+            setWhen(true);
+            setDate(format(new Date(response.data.when), 'yyyy-MM-dd'));
+            setHour(format(new Date(response.data.when), 'HH:mm'));
+          }
         })
         .catch(error => {
           console.log(error);
@@ -212,7 +227,7 @@ export default function Task(props) {
           <TextInput value={description} onChangeText={setDescription} style={styles.inputarea} maxLength={200} multiline={true} placeholder={'task description...'} />
 
           <View style={[styles.inputInline, { paddingHorizontal: 10, marginBottom: 0 }]}>
-            <Switch onValueChange={() => setWhen(!when)} value={when} thumbColor={when ? constants.colors.primary : '#f0f0f0'} />
+            <Switch onValueChange={whenOnChange} value={when} thumbColor={when ? constants.colors.primary : '#f0f0f0'} />
             <Text style={styles.switchLabel}>WHEN?</Text>
           </View>
           {when &&

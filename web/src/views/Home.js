@@ -69,7 +69,7 @@ export default function Home() {
     if (isConnected && token) {
       loadTasks();
     }
-  }, [filterActivated, token, isConnected, isLoading]);
+  }, [filterActivated, token, isConnected, isLoading, firstLoad]);
 
   return (
     <Container>

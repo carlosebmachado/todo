@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';

@@ -134,8 +134,10 @@ export default function Task(props) {
           setTitle(response.data.title);
           setDone(response.data.done);
           setDescription(response.data.description);
-          setDate(format(new Date(response.data.when), 'yyyy-MM-dd'));
-          setHour(format(new Date(response.data.when), 'HH:mm'));
+          if (response.data.when) {
+            setDate(format(new Date(response.data.when), 'yyyy-MM-dd'));
+            setHour(format(new Date(response.data.when), 'HH:mm'));
+          }
         })
         .catch(_ => {
           alert('Error loading task');
