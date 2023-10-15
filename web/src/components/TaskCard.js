@@ -17,8 +17,8 @@ export default function TaskCard({ id, type, title, when, done, ...props }) {
   const [token, setToken] = useState('');
   const [isConnected, setIsConnected] = useState(false);
   const [taskDone, setTaskDone] = useState(done);
-  const date = useMemo(() => format(new Date(when), 'yyyy-MM-dd'), [when]);
-  const hour = useMemo(() => format(new Date(when), 'HH:mm'), [when]);
+  const date = when && format(new Date(when), 'yyyy-MM-dd');
+  const hour = when && format(new Date(when), 'HH:mm');
 
   async function handleDone(_) {
     if (!id) {

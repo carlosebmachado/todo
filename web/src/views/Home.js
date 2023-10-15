@@ -19,10 +19,11 @@ export default function Home() {
   const [isBusy, setIsBusy] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [token, setToken] = useState('');
-  const [filterActivated, setFilterActivated] = useState('all');
+  const [filterActivated, setFilterActivated] = useState('today');
   const [tasks, setTasks] = useState([]);
   const [redirectSync, setRedirectSync] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+  const [firstLoad, setFirstLoad] = useState(true);
 
   function notification() {
     setFilter('late');
@@ -37,8 +38,16 @@ export default function Home() {
     async function loadTasks() {
       await api(token).get(`/task/filter/${filterActivated}`)
         .then(response => {
+          if (response.data.length === 0 && filterActivated !== 'all' && firstLoad) {
+            setFilterActivated('all');
+            setFirstLoad(false);
+            return;
+          }
           setTasks(response.data);
           setIsLoading(false);
+        })
+        .catch(error => {
+          console.log(error);
         })
         .finally(() => {
           setIsBusy(false);
