@@ -14,7 +14,7 @@ import TypeIcon from './TypeIcon';
 
 export default function TaskCard(props) {
   const [taskDone, setTaskDone] = useState(props.done);
-  const date = useMemo(() => format(new Date(props.when), 'MM-dd-yyyy'), [props.when]);
+  const date = useMemo(() => format(new Date(props.when), 'yyyy-MM-dd'), [props.when]);
   const hour = useMemo(() => format(new Date(props.when), 'HH:mm'), [props.when]);
   const [isConnected, setIsConnected] = useState(false);
   const [token, setToken] = useState('');
