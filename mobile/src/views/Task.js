@@ -78,7 +78,7 @@ export default function Task(props) {
       taskBody.when = `${strDate}T${strHour}:00.000`;
     }
 
-    console.log(taskBody);
+    // console.log(taskBody);
 
     // if id has setted, update
     if (taskId) {
@@ -86,8 +86,9 @@ export default function Task(props) {
         .then(() => {
           props.navigation.navigate('Home');
         })
-        .catch(_ => {
-          alert('Error updating task');
+        .catch(error => {
+          console.log(error);
+          alert('Error updating task.');
         })
         .finally(() => {
           setIsBusy(false);
@@ -98,7 +99,8 @@ export default function Task(props) {
         .then(() => {
           props.navigation.navigate('Home');
         })
-        .catch(_ => {
+        .catch(error => {
+          console.log(error);
           alert('Error inserting task');
         })
         .finally(() => {
@@ -114,7 +116,8 @@ export default function Task(props) {
         .then(() => {
           props.navigation.navigate('Home');
         })
-        .catch(_ => {
+        .catch(error => {
+          console.log(error);
           alert('Error deleting task');
         })
         .finally(() => {
@@ -147,7 +150,8 @@ export default function Task(props) {
           setDate(format(new Date(response.data.when), 'yyyy-MM-dd'));
           setHour(format(new Date(response.data.when), 'HH:mm'));
         })
-        .catch(_ => {
+        .catch(error => {
+          console.log(error);
           ToastAndroid.showWithGravity(
             'Error loading task',
             ToastAndroid.SHORT,
@@ -169,7 +173,8 @@ export default function Task(props) {
           setIsConnected(true);
           setToken(response.token);
         })
-        .catch(_ => {
+        .catch(error => {
+          console.log(error);
           props.navigation.navigate('Login');
         });
     }

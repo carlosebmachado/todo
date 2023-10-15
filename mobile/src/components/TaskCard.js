@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, ToastAndroid } from 'react-native';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Checkbox from 'expo-checkbox';
@@ -14,8 +14,8 @@ import TypeIcon from './TypeIcon';
 
 export default function TaskCard(props) {
   const [taskDone, setTaskDone] = useState(props.done);
-  const date = props.when && useMemo(() => format(new Date(props.when), 'yyyy-MM-dd'), [props.when]);
-  const hour = props.when && useMemo(() => format(new Date(props.when), 'HH:mm'), [props.when]);
+  const date = props.when && format(new Date(props.when), 'yyyy-MM-dd');
+  const hour = props.when && format(new Date(props.when), 'HH:mm');
   const [isConnected, setIsConnected] = useState(false);
   const [token, setToken] = useState('');
 
@@ -32,7 +32,8 @@ export default function TaskCard(props) {
       .then((response) => {
         setTaskDone(response.data.done);
       })
-      .catch(_ => {
+      .catch(error => {
+        console.log(error);
         ToastAndroid.showWithGravity(
           'Error updating task',
           ToastAndroid.SHORT,

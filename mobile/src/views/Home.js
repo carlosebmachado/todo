@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Image, StyleSheet } from 'react-native';
+import { Image, StyleSheet, ToastAndroid } from 'react-native';
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 
 import api from '../services/api';
@@ -47,7 +47,13 @@ export default function Home(props) {
         setTasks(response.data);
       })
       .catch(error => {
-
+        console.log(error);
+        ToastAndroid.showWithGravity(
+          'Error loading tasks.',
+          ToastAndroid.SHORT,
+          ToastAndroid.CENTER,
+        );
+        setTasks([]);
       })
       .finally(() => {
         setLoad(false);
