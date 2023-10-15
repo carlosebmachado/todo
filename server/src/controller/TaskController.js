@@ -18,7 +18,21 @@ class TaskController {
   async create(req, res) {
     const { type, title, description, when } = req.body;
 
-    const task = new TaskModel({ userId: req.userId, type, title, description, when: new Date(when) });
+    var taskBody = {
+      userId: req.userId,
+      type,
+      title
+    };
+
+    if (description) {
+      taskBody.description = description;
+    }
+
+    if (when) {
+      taskBody.when = new Date(when);
+    }
+    
+    const task = new TaskModel(taskBody);
 
     try {
       task.save();
