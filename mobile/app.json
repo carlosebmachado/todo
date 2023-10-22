@@ -23,10 +23,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#35bcec"
-      }
+      },
+      "package": "com.carlosebmachado.todomobile"
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b33d6531-b7bf-41b0-9efc-41d15338b8c5"
+      }
     }
   }
 }
