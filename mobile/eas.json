@@ -8,12 +8,17 @@
         "NODE_ENV": "development"
       }
     },
-    "production": {
+    "production-test": {
       "android": {
         "buildType": "apk"
       },
       "env": {
         "NODE_ENV": "production"
+      }
+    },
+    "production": {
+      "android": {
+        "buildType": "apk"
       }
     }
   }
