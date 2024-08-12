@@ -36,7 +36,7 @@ export default function Home() {
 
   useEffect(() => {
     async function loadTasks() {
-      await api(token).get(`/task/filter/${filterActivated}`)
+      api(token).get(`/task/filter/${filterActivated}`)
         .then(response => {
           if (response.data.length === 0 && filterActivated !== 'all' && firstLoad) {
             setFilterActivated('all');

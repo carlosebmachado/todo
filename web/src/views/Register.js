@@ -46,28 +46,31 @@ export default function Register() {
 
     setIsBusy(true);
 
-    try {
-      const response = await api('').post('/auth/register', {
-        name,
-        username,
-        password
-      });
-      await SessionStore.signin({
+    api('').post('/auth/register', {
+      name,
+      username,
+      password
+    }).then(response => {
+      SessionStore.signin({
         userId: response.data.userId,
         username: username,
         name: name,
         token: response.data.token
+      }).then(()=>{
+        setIsBusy(false);
+        setIsConnected(true);
+      }).catch(()=>{
+        setIsBusy(false);
       });
-      setIsConnected(true);
-    } catch (error) {
+    }).catch(error => {
+      setIsBusy(false);
       setErrorMessage('An error occurred while trying to register.');
+      console.log(error);
       setTimeout(() => {
         setErrorMessage('');
       }, errorMessageTimeout);
-      return;
-    }
+    })
 
-    setIsBusy(false);
   }
 
   useEffect(() => {

@@ -38,27 +38,31 @@ export default function Login() {
 
     setIsBusy(true);
 
-    try {
-      const response = await api('').post('/auth/login', {
-        username,
-        password
-      });
-      await SessionStore.signin({
+    api('').post('/auth/login', {
+      username,
+      password
+    }).then(response => {
+      console.log(response);
+      SessionStore.signin({
         userId: response.data.userId,
         username: username,
         name: response.data.name,
         token: response.data.token
+      }).then(() => {
+        setIsBusy(false);
+        setIsConnected(true);
+      }).catch(() => {
+        setIsBusy(false);
       });
-      setIsConnected(true);
-    } catch (error) {
+    }).catch(error => {
+      setIsBusy(false);
+      console.log(error);
       setErrorMessage('Wrong username or password.');
       setTimeout(() => {
         setErrorMessage('');
       }, errorMessageTimeout);
-      return;
-    }
+    });
 
-    setIsBusy(false);
   }
 
   useEffect(() => {
